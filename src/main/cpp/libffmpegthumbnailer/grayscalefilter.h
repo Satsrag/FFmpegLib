@@ -17,32 +17,27 @@
 #ifndef GRAYSCALEFILTER_H
 #define GRAYSCALEFILTER_H
 
-#include "videoframe.h"
+#include "ifilter.h"
 
-namespace ffmpegthumbnailer
-{
+namespace ffmpegthumbnailer {
 
-class GrayScaleFilter : public IFilter
-{
-public:
-    void process(VideoFrame& videoFrame)
-    {
-        for (int i = 0; i < videoFrame.height; ++i)
-        {
-            for (int j = 0; j < videoFrame.width; ++j)
-            {
-                int pixelIndex = (i * videoFrame.lineSize) + (j * 3);
-                uint8_t grayValue = (  videoFrame.frameData[pixelIndex]
-                                     + videoFrame.frameData[pixelIndex+1]
-                                     + videoFrame.frameData[pixelIndex+2] ) / 3;
+    class GrayScaleFilter : public IFilter {
+    public:
+        void process(VideoFrame &videoFrame) {
+            for (int i = 0; i < videoFrame.height; ++i) {
+                for (int j = 0; j < videoFrame.width; ++j) {
+                    int pixelIndex = (i * videoFrame.lineSize) + (j * 3);
+                    uint8_t grayValue = (uint8_t) ((videoFrame.frameData[pixelIndex]
+                                                    + videoFrame.frameData[pixelIndex + 1]
+                                                    + videoFrame.frameData[pixelIndex + 2]) / 3);
 
-                videoFrame.frameData[pixelIndex] = grayValue;
-                videoFrame.frameData[pixelIndex+1] = grayValue;
-                videoFrame.frameData[pixelIndex+2] = grayValue;
+                    videoFrame.frameData[pixelIndex] = grayValue;
+                    videoFrame.frameData[pixelIndex + 1] = grayValue;
+                    videoFrame.frameData[pixelIndex + 2] = grayValue;
+                }
             }
         }
-    }
-};
+    };
 
 }
 

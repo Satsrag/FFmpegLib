@@ -1,6 +1,7 @@
 #!/bin/bash
 #folder="./test"
 
+echo "paths" > path.txt
 function readfile ()
 {
 #这里`为esc下面的按键符号
@@ -14,9 +15,10 @@ function readfile ()
     else
 #否则就能够读取该文件的地址
       echo $1"/"$file
+      echo $1"/"$file >> path.txt
    fi
   done
 }
 #函数定义结束，这里用来运行函数
-folder="."
+folder="src/main/cpp"
 readfile $folder

@@ -22,6 +22,11 @@
 #include <algorithm>
 #include <cassert>
 #include <cstring>
+#include "android/log.h"
+
+#define LOG_TAG "System.out.c"
+#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
+
 
 extern "C" {
 #ifdef LATEST_GREATEST_FFMPEG
@@ -172,6 +177,7 @@ namespace ffmpegthumbnailer {
             timestamp = 0;
         }
 
+        LOGD("timetamp:%lld", timestamp);
         int ret = av_seek_frame(m_pFormatContext, -1, timestamp, 0);
         if (ret >= 0) {
             avcodec_flush_buffers(m_pFormatContext->streams[m_VideoStream]->codec);
