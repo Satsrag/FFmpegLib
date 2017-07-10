@@ -32,6 +32,7 @@ extern "C" {
 #ifdef LATEST_GREATEST_FFMPEG
 #include <libavutil/opt.h>
 #endif
+#include <libavformat/avformat.h>
 #include <libswscale/swscale.h>
 }
 

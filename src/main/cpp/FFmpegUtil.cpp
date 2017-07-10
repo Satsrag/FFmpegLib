@@ -1,17 +1,61 @@
+
 #include "libffmpegthumbnailer/videothumbnailer.h"
 #include "libffmpegthumbnailer/stringoperations.h"
-#include "libffmpegthumbnailer/grayscalefilter.h"
-#include "libffmpegthumbnailer/filmstripfilter.h"
-#include <android/log.h>
 #include <jni.h>
+#include "Log.h"
 
-#define LOG_TAG "System.out.c"
-#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
-
+extern "C" {
+#include "video_edit/Compress.h"
+#include "video_edit/Cut.h"
+}
 using namespace std;
 using namespace ffmpegthumbnailer;
 
 std::string jstringTostring(JNIEnv *env, jstring jstr);
+
+char *logUrl;
+
+void log_callback(void *ptr, int level, const char *fmt,
+                  va_list vl) {
+    FILE *fp = NULL;
+
+    if (!fp)
+        fp = fopen(logUrl, "a+");
+    if (fp) {
+        vfprintf(fp, fmt, vl);
+        fflush(fp);
+        fclose(fp);
+    }
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_zuga_ffmpeg_FFmpegUtil_initFFmpeg(JNIEnv *env, jobject type, jboolean debug,
+                                           jstring logUrl_) {
+    JNI_DEBUG = debug;
+//    if (JNI_DEBUG && logUrl_ != NULL) {
+//        av_log_set_callback(log_callback);
+//        const char *log = env->GetStringUTFChars(logUrl_, 0);
+//        logUrl = (char *) malloc(strlen(log));
+//        strcpy(logUrl, log);
+//        env->ReleaseStringUTFChars(logUrl_, log);
+//    }
+}
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_zuga_ffmpeg_FFmpegUtil_ffmpegRun(JNIEnv *env, jobject type,
+                                          jobjectArray commands) {
+    int argc = env->GetArrayLength(commands);
+    char *argv[argc];
+    int i;
+    for (i = 0; i < argc; i++) {
+        jstring js = (jstring) env->GetObjectArrayElement(commands, i);
+        argv[i] = (char *) env->GetStringUTFChars(js, 0);
+    }
+//    return cmdRun(argc, argv);
+    return 0;
+}
 
 extern "C"
 JNIEXPORT jint JNICALL Java_com_zuga_ffmpeg_FFmpegUtil_getThumb(
@@ -37,6 +81,35 @@ JNIEXPORT jint JNICALL Java_com_zuga_ffmpeg_FFmpegUtil_getThumb(
     return 0;
 }
 
+//Java调用剪切
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_zuga_ffmpeg_FFmpegUtil_clipVideo(JNIEnv *env, jobject instance,
+                                          jdouble startTime, jdouble endTime,
+                                          jstring inFileName_, jstring outFileName_) {
+
+    const char *inFileName = env->GetStringUTFChars(inFileName_, 0);
+    const char *outFileName = env->GetStringUTFChars(outFileName_, 0);
+
+    int result = cut_video((float) startTime, (float) endTime, inFileName, outFileName);
+    if (result == 0) {
+        LOGD("Clip video finished");
+    } else {
+        LOGD("Clip video failed");
+    }
+    env->ReleaseStringUTFChars(inFileName_, inFileName);
+    env->ReleaseStringUTFChars(outFileName_, outFileName);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_zuga_ffmpeg_FFmpegUtil_compress(JNIEnv *env, jobject instance, jstring inFile,
+                                         jstring outFile) {
+    const char *inPath = env->GetStringUTFChars(inFile, 0);
+    const char *outPath = env->GetStringUTFChars(outFile, 0);
+    int i = compress(inPath, outPath);
+}
+
 std::string jstringTostring(JNIEnv *env, jstring jstr) {
     const char *c_str = NULL;
     c_str = env->GetStringUTFChars(jstr, NULL);
@@ -44,4 +117,5 @@ std::string jstringTostring(JNIEnv *env, jstring jstr) {
     env->ReleaseStringUTFChars(jstr, c_str);
     return stemp;
 }
+
 

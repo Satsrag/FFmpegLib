@@ -921,7 +921,7 @@ int     x264_encoder_maximum_delayed_frames( x264_t *h );
  *      If an intra refresh is in progress, begin one as soon as the current one finishes.
  *      Requires that b_intra_refresh be set.
  *
- *      Useful for interactive streaming where the client can tell the server that packet loss has
+ *      Useful for interactive streaming where the client can tell the server that mInPacket loss has
  *      occurred.  In this case, keyint can be set to an extremely high value so that intra refreshes
  *      only occur when calling x264_encoder_intra_refresh.
  *
@@ -932,7 +932,7 @@ int     x264_encoder_maximum_delayed_frames( x264_t *h );
 void    x264_encoder_intra_refresh( x264_t * );
 /* x264_encoder_invalidate_reference:
  *      An interactive error resilience tool, designed for use in a low-latency one-encoder-few-clients
- *      system.  When the client has packet loss or otherwise incorrectly decodes a frame, the encoder
+ *      system.  When the client has mInPacket loss or otherwise incorrectly decodes a frame, the encoder
  *      can be told with this command to "forget" the frame and all frames that depend on it, referencing
  *      only frames that occurred before the loss.  This will force a keyframe if no frames are left to
  *      reference after the aforementioned "forgetting".

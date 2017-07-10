@@ -3,7 +3,8 @@ cmake_minimum_required(VERSION 3.4.1)
 add_library(
     FFmpegLib
     SHARED
-    src/main/cpp/FFmpegUtil.cpp)
+    src/main/cpp/FFmpegUtil.cpp
+    )
 
 add_library(
     tempLib
@@ -52,6 +53,24 @@ add_library(
     src/main/cpp/libpng/pngwrite.c
     src/main/cpp/libpng/pngwtran.c
     src/main/cpp/libpng/pngwutil.c
+
+    ######## cmd ########
+    src/main/cpp/cmd/ffmpeg.h
+    src/main/cpp/cmd/config.h
+    src/main/cpp/cmd/cmdutils.h
+    src/main/cpp/cmd/cmdutils.c
+    src/main/cpp/cmd/cmdutils_common_opts.h
+    src/main/cpp/cmd/ffmpeg.c
+    src/main/cpp/cmd/ffmpeg_filter.c
+    src/main/cpp/cmd/ffmpeg_opt.c
+
+
+    ##### Log #########
+    src/main/cpp/Log.c
+
+    ####### VideoEdit ########
+    src/main/cpp/video_edit/Cut.c
+    src/main/cpp/video_edit/Compress.c
 )
 
 add_library(libavcodec STATIC IMPORTED)
@@ -71,12 +90,11 @@ set_target_properties(lib264 PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE
 add_library(aac STATIC IMPORTED)
 set_target_properties(aac PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/lib/armeabi/libfdk-aac.a)
 
-
 include_directories(src/main/cpp/include)
 
 find_library(log-lib log)
 find_library(z z)
 
-target_link_libraries(tempLib libavformat libavcodec libswscale libavutil libswresample libavfilter lib264 aac ${z} ${log-lib})
+target_link_libraries(tempLib libavformat libavfilter libavcodec libswresample libswscale libavutil lib264 aac ${z} ${log-lib})
 target_link_libraries(FFmpegLib tempLib ${log-lib})
 
