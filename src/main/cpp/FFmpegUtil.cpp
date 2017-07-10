@@ -5,6 +5,8 @@
 #include "Log.h"
 
 extern "C" {
+#include "libavutil/log.h"
+#include "cmd/ffmpeg.h"
 #include "video_edit/Compress.h"
 #include "video_edit/Cut.h"
 }
@@ -33,13 +35,13 @@ JNIEXPORT void JNICALL
 Java_com_zuga_ffmpeg_FFmpegUtil_initFFmpeg(JNIEnv *env, jobject type, jboolean debug,
                                            jstring logUrl_) {
     JNI_DEBUG = debug;
-//    if (JNI_DEBUG && logUrl_ != NULL) {
-//        av_log_set_callback(log_callback);
-//        const char *log = env->GetStringUTFChars(logUrl_, 0);
-//        logUrl = (char *) malloc(strlen(log));
-//        strcpy(logUrl, log);
-//        env->ReleaseStringUTFChars(logUrl_, log);
-//    }
+    if (JNI_DEBUG && logUrl_ != NULL) {
+        av_log_set_callback(log_callback);
+        const char *log = env->GetStringUTFChars(logUrl_, 0);
+        logUrl = (char *) malloc(strlen(log));
+        strcpy(logUrl, log);
+        env->ReleaseStringUTFChars(logUrl_, log);
+    }
 }
 
 extern "C"
@@ -53,8 +55,7 @@ Java_com_zuga_ffmpeg_FFmpegUtil_ffmpegRun(JNIEnv *env, jobject type,
         jstring js = (jstring) env->GetObjectArrayElement(commands, i);
         argv[i] = (char *) env->GetStringUTFChars(js, 0);
     }
-//    return cmdRun(argc, argv);
-    return 0;
+    return cmdRun(argc, argv);
 }
 
 extern "C"
