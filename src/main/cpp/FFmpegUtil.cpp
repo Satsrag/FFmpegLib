@@ -2,6 +2,7 @@
 #include "libffmpegthumbnailer/videothumbnailer.h"
 #include "libffmpegthumbnailer/stringoperations.h"
 #include <jni.h>
+#include <android/log.h>
 #include "Log.h"
 
 extern "C" {
@@ -28,6 +29,7 @@ void log_callback(void *ptr, int level, const char *fmt,
         fflush(fp);
         fclose(fp);
     }
+    __android_log_vprint(ANDROID_LOG_VERBOSE, TAG, fmt, vl);
 }
 
 extern "C"
