@@ -16,33 +16,18 @@ using namespace ffmpegthumbnailer;
 
 std::string jstringTostring(JNIEnv *env, jstring jstr);
 
-char *logUrl;
 
 void log_callback(void *ptr, int level, const char *fmt,
                   va_list vl) {
-    FILE *fp = NULL;
-
-    if (!fp)
-        fp = fopen(logUrl, "a+");
-    if (fp) {
-        vfprintf(fp, fmt, vl);
-        fflush(fp);
-        fclose(fp);
-    }
     __android_log_vprint(ANDROID_LOG_VERBOSE, TAG, fmt, vl);
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_zuga_ffmpeg_FFmpegUtil_initFFmpeg(JNIEnv *env, jobject type, jboolean debug,
-                                           jstring logUrl_) {
+Java_com_zuga_ffmpeg_FFmpegUtil_initFFmpeg(JNIEnv *env, jobject type, jboolean debug) {
     JNI_DEBUG = debug;
-    if (JNI_DEBUG && logUrl_ != NULL) {
+    if (JNI_DEBUG) {
         av_log_set_callback(log_callback);
-        const char *log = env->GetStringUTFChars(logUrl_, 0);
-        logUrl = (char *) malloc(strlen(log));
-        strcpy(logUrl, log);
-        env->ReleaseStringUTFChars(logUrl_, log);
     }
 }
 

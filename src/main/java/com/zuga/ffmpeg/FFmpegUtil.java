@@ -12,7 +12,7 @@ public class FFmpegUtil {
         return ffmpegRun(split);
     }
 
-    public static native void initFFmpeg(boolean debug, String logUrl);
+    public static native void initFFmpeg(boolean debug);
 
     private static native int ffmpegRun(String[] cmd);
 
