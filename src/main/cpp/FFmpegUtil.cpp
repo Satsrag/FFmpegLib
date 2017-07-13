@@ -91,7 +91,7 @@ Java_com_zuga_ffmpeg_FFmpegUtil_clipVideo(JNIEnv *env, jobject instance,
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_zuga_ffmpeg_FFmpegUtil_compress(JNIEnv *env, jobject instance, jstring inFile,
+Java_com_zuga_ffmpeg_FFmpegUtil_ffmegCompress(JNIEnv *env, jobject instance, jstring inFile,
                                          jstring outFile) {
     const char *inPath = env->GetStringUTFChars(inFile, 0);
     const char *outPath = env->GetStringUTFChars(outFile, 0);
