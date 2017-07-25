@@ -41,11 +41,16 @@ public class FFmpegUtil {
         return thumb;
     }
 
-    public static void compress(String inFile, String outFile) {
-        if (mIsRunning) return;
+    public static int compress(String inFile, String outFile, long videoBitRate, long audioBitRate, int width, int height, int threadCount) {
+        if (mIsRunning) return -1;
         mIsRunning = true;
-        ffmegCompress(inFile, outFile);
+        int ret = ffmegCompress(inFile, outFile, videoBitRate, audioBitRate, width, height, threadCount);
         mIsRunning = false;
+        return ret;
+    }
+
+    public static void cancelCompress() {
+        cancelFFmpegCompress();
     }
 
     public static boolean isRunning() {
@@ -60,5 +65,7 @@ public class FFmpegUtil {
 
     private static native void clipVideo(double startTime, double endTime, String inFile, String outFile);
 
-    private static native void ffmegCompress(String inFile, String outFile);
+    private static native int ffmegCompress(String inFile, String outFile, long videoBitRate, long audioBitRate, int width, int height, int threadCount);
+
+    private static native void cancelFFmpegCompress();
 }

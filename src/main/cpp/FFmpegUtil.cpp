@@ -6,7 +6,6 @@
 #include "Log.h"
 
 extern "C" {
-#include "libavutil/log.h"
 #include "cmd/ffmpeg.h"
 #include "video_edit/Compress.h"
 #include "video_edit/Cut.h"
@@ -19,7 +18,6 @@ std::string jstringTostring(JNIEnv *env, jstring jstr);
 
 void log_callback(void *ptr, int level, const char *fmt,
                   va_list vl) {
-    __android_log_vprint(ANDROID_LOG_VERBOSE, TAG, fmt, vl);
 }
 
 extern "C"
@@ -27,7 +25,7 @@ JNIEXPORT void JNICALL
 Java_com_zuga_ffmpeg_FFmpegUtil_initFFmpeg(JNIEnv *env, jobject type, jboolean debug) {
     JNI_DEBUG = debug;
     if (JNI_DEBUG) {
-        av_log_set_callback(log_callback);
+//        av_log_set_callback(log_callback);
     }
 }
 
@@ -81,21 +79,34 @@ Java_com_zuga_ffmpeg_FFmpegUtil_clipVideo(JNIEnv *env, jobject instance,
 
     int result = cut_video((float) startTime, (float) endTime, inFileName, outFileName);
     if (result == 0) {
-        LOGD("Clip video finished");
     } else {
-        LOGD("Clip video failed");
     }
     env->ReleaseStringUTFChars(inFileName_, inFileName);
     env->ReleaseStringUTFChars(outFileName_, outFileName);
 }
 
 extern "C"
-JNIEXPORT void JNICALL
-Java_com_zuga_ffmpeg_FFmpegUtil_ffmegCompress(JNIEnv *env, jobject instance, jstring inFile,
-                                         jstring outFile) {
+JNIEXPORT int JNICALL
+Java_com_zuga_ffmpeg_FFmpegUtil_ffmegCompress(
+        JNIEnv *env,
+        jobject instance,
+        jstring inFile,
+        jstring outFile,
+        jlong videoBitrate,
+        jlong audioBitrate,
+        jint width,
+        jint height,
+        jint threadCount
+) {
     const char *inPath = env->GetStringUTFChars(inFile, 0);
     const char *outPath = env->GetStringUTFChars(outFile, 0);
-    int i = compress(inPath, outPath);
+    return compress(inPath, outPath, videoBitrate, audioBitrate, width, height, threadCount);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_zuga_ffmpeg_FFmpegUtil_cancelFFmpegCompress(JNIEnv *env, jobject instance) {
+    cancelCompress();
 }
 
 std::string jstringTostring(JNIEnv *env, jstring jstr) {
