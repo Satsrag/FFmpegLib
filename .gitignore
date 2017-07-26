@@ -1,5 +1,5 @@
 /build
-.externalNativeBuild
+/.externalNativeBuild
 *.iml
 /path.txt
 
