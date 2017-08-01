@@ -16,5 +16,4 @@ int compress(
 );
 
 void cancelCompress();
-
 #endif //SMALLVIDEOVIEW_COMPRESS_H

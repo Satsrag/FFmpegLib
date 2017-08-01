@@ -4,11 +4,19 @@ Don't show this text it may be used to insert hidden data
 
 2
 00:00:01,500 --> 00:00:04,500
+<<<<<<< HEAD
 SubRip subtitles capability tester 1.3o by ale5000
 Use VLC 1.1 or higher as reference for most things and MPC Home Cinema for others
 This text should be blue
 This text should be red
 This text should be black
+=======
+SubRip subtitles capability tester 1.3o by ale5000
+Use VLC 1.1 or higher as reference for most things and MPC Home Cinema for others
+This text should be blue
+This text should be red
+This text should be black
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 If you see this with the normal font, the player don't (fully) support font face
 
 3
@@ -17,43 +25,79 @@ Hidden
 
 4
 00:00:04,501 --> 00:00:07,500
+<<<<<<< HEAD
 This text should be small
 This text should be normal
+=======
+This text should be small
+This text should be normal
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 This text should be big
 
 5
 00:00:07,501 --> 00:00:11,500
+<<<<<<< HEAD
 This should be an E with an accent: È
 日本語
 This text should be bold, italics and underline
 This text should be small and green
 This text should be small and red
+=======
+This should be an E with an accent: È
+日本語
+This text should be bold, italics and underline
+This text should be small and green
+This text should be small and red
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 This text should be big and brown
 
 6
 00:00:11,501 --> 00:00:14,500
+<<<<<<< HEAD
 This line should be bold
 This line should be italics
 This line should be underline
 This line should be strikethrough
 Both lines
+=======
+This line should be bold
+This line should be italics
+This line should be underline
+This line should be strikethrough
+Both lines
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 should be underline
 
 7
 00:00:14,501 --> 00:00:17,500
+<<<<<<< HEAD
 >
 It would be a good thing to
 hide invalid html tags that are closed and show the text in them
 <invalid_tag_unclosed>but show un-closed invalid html tags
 Show not opened tags</invalid_tag_not_opened>
+=======
+>
+It would be a good thing to
+hide invalid html tags that are closed and show the text in them
+<invalid_tag_unclosed>but show un-closed invalid html tags
+Show not opened tags</invalid_tag_not_opened>
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 <
 
 8
 00:00:17,501 --> 00:00:20,500
+<<<<<<< HEAD
 and also
 hide invalid html tags with parameters that are closed and show the text in them
 <invalid_tag_uc par=5>but show un-closed invalid html tags
 This text should be showed underlined without problems also: 2<3,5>1,4<6
+=======
+and also
+hide invalid html tags with parameters that are closed and show the text in them
+<invalid_tag_uc par=5>but show un-closed invalid html tags
+This text should be showed underlined without problems also: 2<3,5>1,4<6
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 This shouldn't be underlined
 
 9
@@ -66,49 +110,87 @@ This text should NOT be in the normal position
 
 11
 00:00:22,501 --> 00:00:24,500
+<<<<<<< HEAD
 Implementation is the same of the ASS tag
 This text should be at the
+=======
+Implementation is the same of the ASS tag
+This text should be at the
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 top and horizontally centered
 
 12
 00:00:22,501 --> 00:00:24,500
+<<<<<<< HEAD
 This text should be at the
+=======
+This text should be at the
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 middle and horizontally centered
 
 13
 00:00:22,501 --> 00:00:24,500
+<<<<<<< HEAD
 This text should be at the
+=======
+This text should be at the
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 bottom and horizontally centered
 
 14
 00:00:24,501 --> 00:00:26,500
+<<<<<<< HEAD
 This text should be at the
+=======
+This text should be at the
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 top and horizontally at the left
 
 15
 00:00:24,501 --> 00:00:26,500
+<<<<<<< HEAD
 This text should be at the
 middle and horizontally at the left
+=======
+This text should be at the
+middle and horizontally at the left
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 (The second position must be ignored)
 
 16
 00:00:24,501 --> 00:00:26,500
+<<<<<<< HEAD
 This text should be at the
+=======
+This text should be at the
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 bottom and horizontally at the left
 
 17
 00:00:26,501 --> 00:00:28,500
+<<<<<<< HEAD
 This text should be at the
+=======
+This text should be at the
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 top and horizontally at the right
 
 18
 00:00:26,501 --> 00:00:28,500
+<<<<<<< HEAD
 This text should be at the
+=======
+This text should be at the
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 middle and horizontally at the right
 
 19
 00:00:26,501 --> 00:00:28,500
+<<<<<<< HEAD
 This text should be at the
+=======
+This text should be at the
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 bottom and horizontally at the right
 
 20
@@ -137,7 +219,11 @@ Fifth, it should replace third
 
 26
 00:00:45,501 --> 00:00:50,500
+<<<<<<< HEAD
 Sixth, it shouldn't be
+=======
+Sixth, it shouldn't be
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 showed overlapped
 
 27
@@ -150,34 +236,59 @@ text 2
 
 29
 00:00:52,501 --> 00:00:54,500
+<<<<<<< HEAD
 Hide these tags:
 also hide these tags:
+=======
+Hide these tags:
+also hide these tags:
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 but show this: {normal text}
 
 30
 00:00:54,501 --> 00:01:00,500
+<<<<<<< HEAD
 
 \ N is a forced line break
 \ h is a hard space
 Normal spaces at the start and at the end of the line are trimmed while hard spaces are not trimmed.
+=======
+
+\ N is a forced line break
+\ h is a hard space
+Normal spaces at the start and at the end of the line are trimmed while hard spaces are not trimmed.
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 The\hline\hwill\hnever\hbreak\hautomatically\hright\hbefore\hor\hafter\ha\hhard\hspace.\h:-D
 
 31
 00:00:54,501 --> 00:00:56,500
+<<<<<<< HEAD
 
 \h\h\h\h\hA (05 hard spaces followed by a letter)
 A (Normal  spaces followed by a letter)
+=======
+
+\h\h\h\h\hA (05 hard spaces followed by a letter)
+A (Normal  spaces followed by a letter)
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 A (No hard spaces followed by a letter)
 
 32
 00:00:56,501 --> 00:00:58,500
+<<<<<<< HEAD
 \h\h\h\h\hA (05 hard spaces followed by a letter)
 A (Normal  spaces followed by a letter)
 A (No hard spaces followed by a letter)
+=======
+\h\h\h\h\hA (05 hard spaces followed by a letter)
+A (Normal  spaces followed by a letter)
+A (No hard spaces followed by a letter)
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 Show this: \TEST and this: \-)
 
 33
 00:00:58,501 --> 00:01:00,500
+<<<<<<< HEAD
 
 A letter followed by 05 hard spaces: A\h\h\h\h\h
 A letter followed by normal  spaces: A
@@ -185,29 +296,58 @@ A letter followed by no hard spaces: A
 05 hard  spaces between letters: A\h\h\h\h\hA
 5 normal spaces between letters: A     A
 
+=======
+
+A letter followed by 05 hard spaces: A\h\h\h\h\h
+A letter followed by normal  spaces: A
+A letter followed by no hard spaces: A
+05 hard  spaces between letters: A\h\h\h\h\hA
+5 normal spaces between letters: A     A
+
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 ^--Forced line break
 
 34
 00:01:00,501 --> 00:01:02,500
+<<<<<<< HEAD
 Both line should be strikethrough,
 yes.
 Correctly closed tags
+=======
+Both line should be strikethrough,
+yes.
+Correctly closed tags
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 should be hidden.
 
 35
 00:01:02,501 --> 00:01:04,500
+<<<<<<< HEAD
 It shouldn't be strikethrough,
 not opened tag showed as text.</s>
+=======
+It shouldn't be strikethrough,
+not opened tag showed as text.</s>
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 Not opened tag showed as text.</xxxxx>
 
 36
 00:01:04,501 --> 00:01:06,500
+<<<<<<< HEAD
 Three lines should be strikethrough,
 yes.
+=======
+Three lines should be strikethrough,
+yes.
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 <yyyy>Not closed tags showed as text
 
 37
 00:01:06,501 --> 00:01:08,500
+<<<<<<< HEAD
 Both line should be strikethrough but
+=======
+Both line should be strikethrough but
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 the wrong closing tag should be showed</b>
 

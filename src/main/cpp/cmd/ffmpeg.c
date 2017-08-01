@@ -580,6 +580,7 @@ static void ffmpeg_cleanup(int ret) {
     av_freep(&input_files);
     av_freep(&output_streams);
     av_freep(&output_files);
+
     uninit_opts();
 
     avformat_network_deinit();

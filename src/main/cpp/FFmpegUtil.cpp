@@ -6,6 +6,7 @@
 #include "Log.h"
 
 extern "C" {
+#include "libavutil/log.h"
 #include "cmd/ffmpeg.h"
 #include "video_edit/Compress.h"
 #include "video_edit/Cut.h"
@@ -18,6 +19,7 @@ std::string jstringTostring(JNIEnv *env, jstring jstr);
 
 void log_callback(void *ptr, int level, const char *fmt,
                   va_list vl) {
+//    __android_log_vprint(ANDROID_LOG_VERBOSE, TAG, fmt, vl);
 }
 
 extern "C"

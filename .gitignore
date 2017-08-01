@@ -1,5 +1,9 @@
 /build
+<<<<<<< HEAD
 .externalNativeBuild
+=======
+/.externalNativeBuild
+>>>>>>> e6fb5b468f4ff021440893334485af80e0c99d8f
 *.iml
 /path.txt
 
