@@ -64,6 +64,7 @@ static int initInput(
             case AVMEDIA_TYPE_VIDEO:
                 *inVideoIndex = i;
                 *inVideoCodecContext = (*inFormatContext)->streams[i]->codec;
+                (*inVideoCodecContext)->thread_count = 0;
                 AVCodec *videoCodec = avcodec_find_decoder(
                         (*inFormatContext)->streams[i]->codecpar->codec_id);
                 avcodec_open2(*inVideoCodecContext, videoCodec, NULL);
@@ -145,10 +146,11 @@ static int initOutput(
             (*outVideoCodecContext)->flags = AV_CODEC_FLAG_GLOBAL_HEADER;
             (*outVideoCodecContext)->bit_rate = videoBitRate;
             (*outVideoCodecContext)->gop_size = 250;
-            (*outVideoCodecContext)->thread_count = videoThreadCount;
+//            (*outVideoCodecContext)->thread_count = videoThreadCount;
+            (*outVideoCodecContext)->thread_count = 0;
             (*outVideoCodecContext)->time_base.num = inVideoCodecContext->time_base.num;
             (*outVideoCodecContext)->time_base.den = inVideoCodecContext->time_base.den;
-            (*outVideoCodecContext)->max_b_frames = 3;
+            (*outVideoCodecContext)->max_b_frames = 0;
             (*outVideoCodecContext)->codec_id = AV_CODEC_ID_H264;
             (*outVideoCodecContext)->codec_type = AVMEDIA_TYPE_VIDEO;
             (*outVideoCodecContext)->pix_fmt = AV_PIX_FMT_YUV420P;
@@ -205,7 +207,8 @@ static int initOutput(
             (*outAudioCodecContext)->codec_id = inAudioCodecContext->codec_id;
             (*outAudioCodecContext)->codec_type = inAudioCodecContext->codec_type;
             (*outAudioCodecContext)->frame_size = inAudioCodecContext->frame_size;
-            (*outAudioCodecContext)->thread_count = audioThreadCount;
+            (*outAudioCodecContext)->thread_count = 0;
+//            (*outAudioCodecContext)->thread_count = audioThreadCount;
             (*outAudioCodecContext)->channel_layout = inAudioCodecContext->channel_layout;
             if (outCodec->channel_layouts) {
                 (*outAudioCodecContext)->channel_layout = outCodec->channel_layouts[0];
@@ -319,7 +322,7 @@ static int transCodeVideo(
             1
     );
 
-    LOGD("------------------------------start video trans code-------------------------------------");
+    LOGE("------------------------------start video trans code-------------------------------------");
 
     LOGD(
             ">>>>in stream time base num: %d den: %d<<<<",
@@ -336,12 +339,16 @@ static int transCodeVideo(
     );
     inPacket->dts = inPacket->pts;
 
+    LOGD("1111111111111111111111111111111111");
+
     //1. 解码
     ret = avcodec_send_packet(inVideoCodecContext, inPacket);
     if (ret != 0) {
         LOGE("send decode packet error");
         return -200;
     }
+
+    LOGD("22222222222222222222222222222222222");
 
     ret = avcodec_receive_frame(inVideoCodecContext, inFrame);
     if (ret != 0) {
@@ -356,7 +363,6 @@ static int transCodeVideo(
     );
 
     LOGD(">>>>in frame pts: %lld<<<<", inFrame->pts);
-
     sws_scale(
             swsContext,
             (const uint8_t *const *) inFrame->data,
@@ -365,7 +371,6 @@ static int transCodeVideo(
             outVideoFrame->data,
             outVideoFrame->linesize
     );
-
     outVideoFrame->format = inFrame->format;
     outVideoFrame->width = outVideoCodecContext->width;
     outVideoFrame->height = outVideoCodecContext->height;
@@ -378,7 +383,7 @@ static int transCodeVideo(
             outVideoCodecContext->time_base.den
     );
 
-    LOGD("<<<<out packet pts: %lld>>>>", outVideoFrame->pts);
+    LOGD("<<<<out frame pts: %lld>>>>", outVideoFrame->pts);
 
 
     ret = avcodec_send_frame(outVideoCodecContext, outVideoFrame);
@@ -387,6 +392,7 @@ static int transCodeVideo(
         return -203;
     }
 
+    LOGD("33333333333333333333333");
 
     outPacket->data = NULL;
     outPacket->size = 0;
@@ -396,6 +402,8 @@ static int transCodeVideo(
         LOGE("receive encode packet error, CODE: %d", ret);
         return -203;
     }
+
+    LOGD("444444444444444444444444444");
 
     outPacket->pts = av_rescale_q(
             outPacket->pts,
@@ -442,7 +450,7 @@ static int transCodeAudio(
 
     int ret;
 
-    LOGD("------------------------------start audio trans code-------------------------------------");
+    LOGE("------------------------------start audio trans code-------------------------------------");
 
     LOGD(
             ">>>>in stream time base num: %d den: %d<<<<",
@@ -719,7 +727,7 @@ int compress(
             outVideoCodecContext->width,
             outVideoCodecContext->height,
             AV_PIX_FMT_YUV420P,
-            SWS_BICUBIC,
+            SWS_FAST_BILINEAR,
             NULL,
             NULL,
             NULL
