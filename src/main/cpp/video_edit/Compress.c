@@ -185,6 +185,9 @@ static int initOutput(
                 LOGE("find AVCodec error!");
                 return -103;
             }
+            if (outCodec->capabilities & AV_CODEC_CAP_DELAY) {
+                LOGE("out codec capabilities true");
+            }
             ret = avcodec_open2(*outVideoCodecContext, outCodec, &param);
             if (ret != 0) {
                 LOGE("open codec error");
