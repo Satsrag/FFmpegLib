@@ -8,6 +8,8 @@
 #include <libswresample/swresample.h>
 #include "libavformat/avformat.h"
 #include "../Log.h"
+#include "Progress.h"
+
 
 static volatile int mIsCancel = 0;
 
@@ -29,6 +31,18 @@ static char *getRotate(AVStream *inStream) {
             return "0";
         }
     }
+}
+
+static void setProgress(AVPacket *outPacket, AVFormatContext *outFormatContext, int *outVideoIndex,
+                        AVFormatContext *inFormatContext, char *inFile) {
+    long pts = outPacket->pts;
+    long num = outFormatContext->streams[*outVideoIndex]->time_base.num;
+    long den = outFormatContext->streams[*outVideoIndex]->time_base.den;
+    long nowTime = (long long) pts * 1000 * num / den;
+    long duration = inFormatContext->duration / 1000;
+    float percent = (float) (nowTime * 100 / (double) duration);
+
+    updateProgress(inFile, percent);
 }
 
 static int initInput(
@@ -302,6 +316,7 @@ static int transCodeVideo(
         AVPacket *outPacket,
         AVFrame *inFrame,
         AVFrame *outVideoFrame,
+        char *inFile,
         struct SwsContext *swsContext,
         int *inVideoIndex,
         int *outVideoIndex
@@ -325,7 +340,7 @@ static int transCodeVideo(
             1
     );
 
-    LOGE("------------------------------start video trans code-------------------------------------");
+    LOGD("------------------------------start video trans code-------------------------------------");
 
     LOGD(
             ">>>>in stream time base num: %d den: %d<<<<",
@@ -424,6 +439,8 @@ static int transCodeVideo(
 
     LOGD("<<<<out packet pts: %lld dts: %lld>>>>", outPacket->pts, outPacket->dts);
 
+    setProgress(outPacket, outFormatContext, outVideoIndex, inFormatContext, inFile);
+
     //3. 写入 AVFormatContext
     ret = av_interleaved_write_frame(outFormatContext, outPacket);
 
@@ -453,7 +470,7 @@ static int transCodeAudio(
 
     int ret;
 
-    LOGE("------------------------------start audio trans code-------------------------------------");
+    LOGD("------------------------------start audio trans code-------------------------------------");
 
     LOGD(
             ">>>>in stream time base num: %d den: %d<<<<",
@@ -584,7 +601,9 @@ static int flushEncoder(
         AVFormatContext *outFormatContext,
         AVCodecContext *outCodecContext,
         AVPacket *outPacket,
-        unsigned int streamIndex
+        int streamIndex,
+        AVFormatContext *inFormatContext,
+        char *inFile
 ) {
     int ret;
     if (!(outCodecContext->codec->capabilities & CODEC_CAP_DELAY)) {
@@ -631,6 +650,10 @@ static int flushEncoder(
                 outFormatContext->streams[streamIndex]->time_base.num,
                 outFormatContext->streams[streamIndex]->time_base.den
         );
+
+        if (inFile != NULL) {
+            setProgress(outPacket, outFormatContext, &streamIndex, inFormatContext, inFile);
+        }
 
         LOGD("<<<<out packet pts: %lld dts: %lld>>>>", outPacket->pts, outPacket->dts);
         ret = av_interleaved_write_frame(outFormatContext, outPacket);
@@ -743,7 +766,6 @@ int compress(
     initAudioFrame(inAudioCodecContext, outAudioCodecContext, &outAudioFrame, &swrContext);
 
     while (av_read_frame(inFormatContext, inPacket) == 0) {
-        LOGE("mIsCancel: %d", mIsCancel);
         if (mIsCancel == 0) break;
 
         if (inPacket->stream_index == inVideoIndex) {
@@ -756,6 +778,7 @@ int compress(
                     outPacket,
                     inFrame,
                     outVideoFrame,
+                    (char *) inFilename,
                     swsContext,
                     &inVideoIndex,
                     &outVideoIndex);
@@ -779,9 +802,9 @@ int compress(
 
     if (mIsCancel != 0) {
         flushEncoder(outFormatContext, outVideoCodecContext, outPacket,
-                     (unsigned int) outVideoIndex);
+                     outVideoIndex, inFormatContext, (char *) inFilename);
         flushEncoder(outFormatContext, outAudioCodecContext, outPacket,
-                     (unsigned int) outAudioIndex);
+                     outAudioIndex, NULL, NULL);
         ret = av_write_trailer(outFormatContext);
         if (ret != 0) {
             LOGE("write trailer error");

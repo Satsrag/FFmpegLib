@@ -17,8 +17,8 @@
 #ifndef VIDEO_THUMBNAILER_H
 #define VIDEO_THUMBNAILER_H
 
-#include <string>
-#include <vector>
+//#include <string>
+//#include <vector>
 #include <map>
 #include <inttypes.h>
 

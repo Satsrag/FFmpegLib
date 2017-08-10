@@ -3,6 +3,7 @@ package com.zuga.ffmpeg;
 public class FFmpegUtil {
 
     private volatile static boolean mIsRunning = false;
+    private static CompressListener mListener;
 
     static {
         System.loadLibrary("FFmpegLib");
@@ -49,6 +50,16 @@ public class FFmpegUtil {
         return ret;
     }
 
+    public static void updateCompress(String videoPath, float progress) {
+        if (mListener != null) {
+            mListener.onUpdateProgress(videoPath, progress);
+        }
+    }
+
+    public static void setCompressListener(CompressListener listener) {
+        mListener = listener;
+    }
+
     public static void cancelCompress() {
         cancelFFmpegCompress();
     }
@@ -68,4 +79,8 @@ public class FFmpegUtil {
     private static native int ffmegCompress(String inFile, String outFile, long videoBitRate, long audioBitRate, int width, int height, int threadCount);
 
     private static native void cancelFFmpegCompress();
+
+    public interface CompressListener {
+        void onUpdateProgress(String videoPath, float progress);
+    }
 }

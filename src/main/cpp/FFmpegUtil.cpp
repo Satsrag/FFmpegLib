@@ -10,12 +10,12 @@ extern "C" {
 #include "cmd/ffmpeg.h"
 #include "video_edit/Compress.h"
 #include "video_edit/Cut.h"
+#include "video_edit/Progress.h"
 }
 using namespace std;
-using namespace ffmpegthumbnailer;
+//using namespace ffmpegthumbnailer;
 
 std::string jstringTostring(JNIEnv *env, jstring jstr);
-
 
 void log_callback(void *ptr, int level, const char *fmt,
                   va_list vl) {
@@ -49,23 +49,24 @@ extern "C"
 JNIEXPORT jint JNICALL Java_com_zuga_ffmpeg_FFmpegUtil_getThumb(
         JNIEnv *env, jobject /* Jni object */,
         jstring inputFile, jstring outputFile, jstring seekTime) {
-    int thumbnailSize = 128;
-    int imageQuality = 3;
-    bool workaroundIssues = false;
-    bool maintainAspectRatio = true;
-    bool smartFrameSelection = false;
-    try {
-        VideoThumbnailer videoThumbnailer(thumbnailSize, workaroundIssues,
-                                          maintainAspectRatio, imageQuality,
-                                          smartFrameSelection);
-        videoThumbnailer.setSeekTime(jstringTostring(env, seekTime));
-        videoThumbnailer.generateThumbnail(jstringTostring(env, inputFile), Jpeg,
-                                           jstringTostring(env, outputFile));
-    } catch (exception &e) {
-        return (jint) -1;
-    } catch (...) {
-        return (jint) -1;
-    }
+//    int thumbnailSize = 128;
+//    int imageQuality = 3;
+//    bool workaroundIssues = false;
+//    bool maintainAspectRatio = true;
+//    bool smartFrameSelection = false;
+//    try {
+//        VideoThumbnailer videoThumbnailer(thumbnailSize, workaroundIssues,
+//                                          maintainAspectRatio, imageQuality,
+//                                          smartFrameSelection);
+//        videoThumbnailer.setSeekTime(jstringTostring(env, seekTime));
+//        videoThumbnailer.generateThumbnail(jstringTostring(env, inputFile), Jpeg,
+//                                           jstringTostring(env, outputFile));
+//    } catch (exception &e) {
+//        return (jint) -1;
+//    } catch (...) {
+//        return (jint) -1;
+//    }
+//    return 0;
     return 0;
 }
 
@@ -102,6 +103,7 @@ Java_com_zuga_ffmpeg_FFmpegUtil_ffmegCompress(
 ) {
     const char *inPath = env->GetStringUTFChars(inFile, 0);
     const char *outPath = env->GetStringUTFChars(outFile, 0);
+    setJni(env);
     return compress(inPath, outPath, videoBitrate, audioBitrate, width, height, threadCount);
 }
 

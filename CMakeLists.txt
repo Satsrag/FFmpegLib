@@ -27,10 +27,10 @@ add_library(
     src/main/cpp/libffmpegthumbnailer/stringoperations.cpp
     src/main/cpp/libffmpegthumbnailer/stringoperations.h
     src/main/cpp/libffmpegthumbnailer/videoframe.h
-    src/main/cpp/libffmpegthumbnailer/videothumbnailer.cpp
-    src/main/cpp/libffmpegthumbnailer/videothumbnailer.h
-    src/main/cpp/libffmpegthumbnailer/videothumbnailerc.cpp
-    src/main/cpp/libffmpegthumbnailer/videothumbnailerc.h
+    #src/main/cpp/libffmpegthumbnailer/videothumbnailer.cpp
+    #src/main/cpp/libffmpegthumbnailer/videothumbnailer.h
+    #src/main/cpp/libffmpegthumbnailer/videothumbnailerc.cpp
+    #src/main/cpp/libffmpegthumbnailer/videothumbnailerc.h
 
     ####### libpng #######
     src/main/cpp/libpng/png.c
@@ -71,6 +71,8 @@ add_library(
     ####### VideoEdit ########
     src/main/cpp/video_edit/Cut.c
     src/main/cpp/video_edit/Compress.c
+    src/main/cpp/video_edit/Progress.c
+    src/main/cpp/video_edit/Progress.h
 )
 
 add_library(libavcodec SHARED IMPORTED)
