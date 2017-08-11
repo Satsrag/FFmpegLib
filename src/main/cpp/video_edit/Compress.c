@@ -41,7 +41,6 @@ static void setProgress(AVPacket *outPacket, AVFormatContext *outFormatContext, 
     long nowTime = (long long) pts * 1000 * num / den;
     long duration = inFormatContext->duration / 1000;
     float percent = (float) (nowTime * 100 / (double) duration);
-
     updateProgress(inFile, percent);
 }
 
