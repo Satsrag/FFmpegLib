@@ -7,8 +7,8 @@
 
 #include <jni.h>
 
-void updateProgress(char *inPath, float progress);
+void updateProgress(int videoId, float progress);
 
-void setJni(JNIEnv* env);
+void setJni(JNIEnv *env);
 
 #endif //SMALLVIDEOVIEW_PROGRESS_H

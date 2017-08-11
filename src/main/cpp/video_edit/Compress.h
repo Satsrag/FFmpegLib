@@ -12,7 +12,7 @@ int compress(
         long audioBitRate,
         int width,
         int height,
-        int threadCount
+        int videoId
 );
 
 void cancelCompress();

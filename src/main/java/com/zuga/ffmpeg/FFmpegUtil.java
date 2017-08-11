@@ -3,6 +3,7 @@ package com.zuga.ffmpeg;
 public class FFmpegUtil {
 
     private volatile static boolean mIsRunning = false;
+    private volatile static boolean mIsFFmpegCmdRunning = false;
     private static CompressListener mListener;
 
     static {
@@ -10,12 +11,12 @@ public class FFmpegUtil {
     }
 
     public static int ffmpegCMDRun(String cmd) {
-        if (mIsRunning) return -1;
-        mIsRunning = true;
+        if (mIsFFmpegCmdRunning) return -1;
+        mIsFFmpegCmdRunning = true;
         String regulation = "[ \\t]+";
         final String[] split = cmd.split(regulation);
         int i = ffmpegRun(split);
-        mIsRunning = false;
+        mIsFFmpegCmdRunning = false;
         return i;
     }
 
@@ -50,9 +51,9 @@ public class FFmpegUtil {
         return ret;
     }
 
-    public static void updateCompress(String videoPath, float progress) {
+    public static void updateCompress(int videoId, float progress) {
         if (mListener != null) {
-            mListener.onUpdateProgress(videoPath, progress);
+            mListener.onUpdateProgress(videoId, progress);
         }
     }
 
@@ -81,6 +82,6 @@ public class FFmpegUtil {
     private static native void cancelFFmpegCompress();
 
     public interface CompressListener {
-        void onUpdateProgress(String videoPath, float progress);
+        void onUpdateProgress(int videoId, float progress);
     }
 }

@@ -99,12 +99,12 @@ Java_com_zuga_ffmpeg_FFmpegUtil_ffmegCompress(
         jlong audioBitrate,
         jint width,
         jint height,
-        jint threadCount
+        jint videoId
 ) {
     const char *inPath = env->GetStringUTFChars(inFile, 0);
     const char *outPath = env->GetStringUTFChars(outFile, 0);
     setJni(env);
-    return compress(inPath, outPath, videoBitrate, audioBitrate, width, height, threadCount);
+    return compress(inPath, outPath, videoBitrate, audioBitrate, width, height, videoId);
 }
 
 extern "C"

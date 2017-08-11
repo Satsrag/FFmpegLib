@@ -34,14 +34,14 @@ static char *getRotate(AVStream *inStream) {
 }
 
 static void setProgress(AVPacket *outPacket, AVFormatContext *outFormatContext, int *outVideoIndex,
-                        AVFormatContext *inFormatContext, char *inFile) {
+                        AVFormatContext *inFormatContext, int videoId) {
     long pts = outPacket->pts;
     long num = outFormatContext->streams[*outVideoIndex]->time_base.num;
     long den = outFormatContext->streams[*outVideoIndex]->time_base.den;
     long nowTime = (long long) pts * 1000 * num / den;
     long duration = inFormatContext->duration / 1000;
     float percent = (float) (nowTime * 100 / (double) duration);
-    updateProgress(inFile, percent);
+    updateProgress(videoId, percent);
 }
 
 static int initInput(
@@ -118,8 +118,7 @@ static int initOutput(
         long audioBitRate,
         int width,
         int height,
-        char *rotate,
-        int threadCount
+        char *rotate
 ) {
 
     int ret;
@@ -136,13 +135,6 @@ static int initOutput(
     if (ret < 0) {
         LOGE("open output AVIOContext error");
         return -101;
-    }
-
-    int audioThreadCount = threadCount / 2;
-    int videoThreadCount = threadCount - audioThreadCount;
-    if (audioThreadCount == 0) {
-        audioThreadCount = 2;
-        videoThreadCount = 3;
     }
 
     AVStream *outStream;
@@ -315,10 +307,10 @@ static int transCodeVideo(
         AVPacket *outPacket,
         AVFrame *inFrame,
         AVFrame *outVideoFrame,
-        char *inFile,
         struct SwsContext *swsContext,
         int *inVideoIndex,
-        int *outVideoIndex
+        int *outVideoIndex,
+        int videoId
 ) {
 
     int ret;
@@ -438,7 +430,7 @@ static int transCodeVideo(
 
     LOGD("<<<<out packet pts: %lld dts: %lld>>>>", outPacket->pts, outPacket->dts);
 
-    setProgress(outPacket, outFormatContext, outVideoIndex, inFormatContext, inFile);
+    setProgress(outPacket, outFormatContext, outVideoIndex, inFormatContext, videoId);
 
     //3. 写入 AVFormatContext
     ret = av_interleaved_write_frame(outFormatContext, outPacket);
@@ -602,7 +594,8 @@ static int flushEncoder(
         AVPacket *outPacket,
         int streamIndex,
         AVFormatContext *inFormatContext,
-        char *inFile
+        char *inFile,
+        int videoId
 ) {
     int ret;
     if (!(outCodecContext->codec->capabilities & CODEC_CAP_DELAY)) {
@@ -651,10 +644,10 @@ static int flushEncoder(
         );
 
         if (inFile != NULL) {
-            setProgress(outPacket, outFormatContext, &streamIndex, inFormatContext, inFile);
+            setProgress(outPacket, outFormatContext, &streamIndex, inFormatContext, videoId);
         }
 
-        LOGD("<<<<out packet pts: %lld dts: %lld>>>>", outPacket->pts, outPacket->dts);
+        LOGD("<<<<out packet pts: %ld dts: %ld>>>>", outPacket->pts, outPacket->dts);
         ret = av_interleaved_write_frame(outFormatContext, outPacket);
         LOGD("------------------------------end %d mux----------------------", streamIndex);
 
@@ -675,11 +668,11 @@ int compress(
         long audioBitRate,
         int width,
         int height,
-        int threadCount
+        int videoId
 ) {
 
-    LOGW("inFile:%s,outFile:%s,videoBitrate:%ld,audioBitrate:%ld,width:%d,height:%d,threadCount:%d",
-         inFilename, outFilename, videoBitRate, audioBitRate, width, height, threadCount);
+    LOGW("inFile:%s,outFile:%s,videoBitrate:%ld,audioBitrate:%ld,width:%d,height:%d,videoId:%d",
+         inFilename, outFilename, videoBitRate, audioBitRate, width, height, videoId);
 
     int ret;
     AVFormatContext *inFormatContext = NULL, *outFormatContext = NULL;
@@ -725,8 +718,7 @@ int compress(
             audioBitRate,
             width,
             height,
-            getRotate(inFormatContext->streams[inVideoIndex]),
-            threadCount
+            getRotate(inFormatContext->streams[inVideoIndex])
     );
     if (ret != 0) {
         LOGE("init output file error");
@@ -777,10 +769,11 @@ int compress(
                     outPacket,
                     inFrame,
                     outVideoFrame,
-                    (char *) inFilename,
                     swsContext,
                     &inVideoIndex,
-                    &outVideoIndex);
+                    &outVideoIndex,
+                    videoId
+            );
         } else if (inPacket->stream_index == inAudioIndex) {
             transCodeAudio(
                     inFormatContext,
@@ -801,9 +794,9 @@ int compress(
 
     if (mIsCancel != 0) {
         flushEncoder(outFormatContext, outVideoCodecContext, outPacket,
-                     outVideoIndex, inFormatContext, (char *) inFilename);
+                     outVideoIndex, inFormatContext, (char *) inFilename, videoId);
         flushEncoder(outFormatContext, outAudioCodecContext, outPacket,
-                     outAudioIndex, NULL, NULL);
+                     outAudioIndex, NULL, NULL, videoId);
         ret = av_write_trailer(outFormatContext);
         if (ret != 0) {
             LOGE("write trailer error");

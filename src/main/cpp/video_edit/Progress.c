@@ -10,10 +10,10 @@ JNIEnv *compressEnv;
 jclass pJclass;
 jmethodID method;
 
-void updateProgress(char *inPath, float progress) {
-    jstring inFile = (*compressEnv)->NewStringUTF(compressEnv, inPath);
-    (*compressEnv)->CallStaticVoidMethod(compressEnv, pJclass, method, inFile, progress);
-    (*compressEnv)->DeleteLocalRef(compressEnv, inFile);
+void updateProgress(int videoId, float progress) {
+    LOGD("updateProgress 1");
+    (*compressEnv)->CallStaticVoidMethod(compressEnv, pJclass, method, videoId, progress);
+    LOGD("updateProgress 2");
 }
 
 void setJni(JNIEnv *env) {
@@ -22,7 +22,7 @@ void setJni(JNIEnv *env) {
     if (pJclass == 0) return;
     method = (*compressEnv)->GetStaticMethodID(
             compressEnv, pJclass, "updateCompress",
-            "(Ljava/lang/String;F)V"
+            "(IF)V"
     );
     if (method == 0) return;
 }
