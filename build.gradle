@@ -38,3 +38,5 @@ android {
 dependencies {
     compile files('libs/media.jar')
 }
+
+apply from: './nexus_maven.gradle'

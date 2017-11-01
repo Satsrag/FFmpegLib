@@ -1,0 +1,39 @@
+apply plugin: 'maven'
+
+//task androidJavadocs(type: Javadoc) {
+//    source = android.sourceSets.main.java.srcDirs
+//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+//}
+//
+//task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+//    classifier = 'javadoc'
+//    from androidJavadocs.destinationDir
+//}
+//
+//task androidSourcesJar(type: Jar) {
+//    classifier = 'sources'
+//    from android.sourceSets.main.java.srcDirs
+//}
+//
+//artifacts {
+//    archives androidSourcesJar
+//    archives androidJavadocsJar
+//}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "http://web.zuga-tech.net:8081/nexus/content/repositories/android-private-lib/") {
+                authentication(userName: user, password: pass)
+            }
+            pom.project {
+                name 'FFmpegLib'
+                version '1.0.0'
+                artifactId 'FFmpegLib'
+                groupId 'com.zuga'
+                packaging 'aar'
+                description 'android aar'
+            }
+        }
+    }
+}
