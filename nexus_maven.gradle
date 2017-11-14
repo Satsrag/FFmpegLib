@@ -1,29 +1,46 @@
 apply plugin: 'maven'
 
-//task androidJavadocs(type: Javadoc) {
-//    source = android.sourceSets.main.java.srcDirs
-//    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-//}
-//
-//task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
-//    classifier = 'javadoc'
-//    from androidJavadocs.destinationDir
-//}
-//
-//task androidSourcesJar(type: Jar) {
-//    classifier = 'sources'
-//    from android.sourceSets.main.java.srcDirs
-//}
-//
-//artifacts {
-//    archives androidSourcesJar
-//    archives androidJavadocsJar
-//}
+//Solution by the second link
+allprojects {
+    tasks.withType(Javadoc).all { enabled = false }
+}
+//Solution by the first link
+if (JavaVersion.current().isJava8Compatible()) {
+    allprojects {
+        tasks.withType(Javadoc) {
+            options.addStringOption('Xdoclint:none', '-quiet')
+        }
+    }
+}
+
+task androidJavadocs(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task androidJavadocsJar(type: Jar, dependsOn: androidJavadocs) {
+    classifier = 'javadoc'
+    from androidJavadocs.destinationDir
+}
+
+task androidSourcesJar(type: Jar) {
+    classifier = 'sources'
+    from android.sourceSets.main.java.srcDirs
+}
+
+artifacts {
+    archives androidSourcesJar
+    archives androidJavadocsJar
+}
 
 uploadArchives {
     repositories {
         mavenDeployer {
             repository(url: "http://web.zuga-tech.net:8081/nexus/content/repositories/android-private-lib/") {
+                authentication(userName: user, password: pass)
+            }
+
+            snapshotRepository(url: "http://web.zuga-tech.net:8081/nexus/content/repositories/android-private-snapshot/") {
                 authentication(userName: user, password: pass)
             }
             pom.project {
