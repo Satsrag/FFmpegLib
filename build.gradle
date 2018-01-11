@@ -11,7 +11,7 @@ android {
                 cppFlags "-std=c++11"
             }
             ndk {
-                abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64", "armeabi"//"mips","mips64"
+                abiFilters  "armeabi"//"mips","mips64""armeabi-v7a", "arm64-v8a", "x86", "x86_64",
             }
         }
     }

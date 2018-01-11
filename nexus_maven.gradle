@@ -45,7 +45,7 @@ uploadArchives {
             }
             pom.project {
                 name 'FFmpegLib'
-                version '1.0.1'
+                version '1.0.2'
                 artifactId 'FFmpegLib'
                 groupId 'com.zuga'
                 packaging 'aar'

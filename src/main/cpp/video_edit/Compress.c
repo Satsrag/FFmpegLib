@@ -35,12 +35,12 @@ static char *getRotate(AVStream *inStream) {
 
 static void setProgress(AVPacket *outPacket, AVFormatContext *outFormatContext, int *outVideoIndex,
                         AVFormatContext *inFormatContext, int videoId) {
-    long pts = outPacket->pts;
-    long num = outFormatContext->streams[*outVideoIndex]->time_base.num;
-    long den = outFormatContext->streams[*outVideoIndex]->time_base.den;
-    long nowTime = (long long) pts * 1000 * num / den;
-    long duration = inFormatContext->duration / 1000;
-    float percent = (float) (nowTime * 100 / (double) duration);
+    long long pts = outPacket->pts;
+    int num = outFormatContext->streams[*outVideoIndex]->time_base.num;
+    int den = outFormatContext->streams[*outVideoIndex]->time_base.den;
+    long long nowTime = pts * 1000 * num / den;
+    long long duration = inFormatContext->duration / 1000;
+    float percent = (float) (nowTime * 100 / (long double) duration);
     updateProgress(videoId, percent);
 }
 
