@@ -2,7 +2,7 @@ apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '27.0.3'
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 26
@@ -36,7 +36,7 @@ android {
 }
 
 dependencies {
-    compile files('libs/media.jar')
+    implementation files('libs/media.jar')
 }
 
 apply from: './nexus_maven.gradle'
