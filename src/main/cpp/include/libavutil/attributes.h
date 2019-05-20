@@ -160,7 +160,7 @@
 #endif
 
 #if AV_GCC_VERSION_AT_LEAST(2,5)
-#    define av_noreturn __attribute__((noreturn))
+#define av_noreturn __attribute__((noreturn))
 #else
 #    define av_noreturn
 #endif
