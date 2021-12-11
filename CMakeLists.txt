@@ -92,7 +92,7 @@ set_target_properties(lib264 PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE
 add_library(aac SHARED IMPORTED)
 set_target_properties(aac PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/lib/${ANDROID_ABI}/libfdk-aac.so)
 
-include_directories(ffmpeg-3.2.5)
+include_directories(ffmpeg-3.4.9)
 
 find_library(log-lib log)
 find_library(z z)
