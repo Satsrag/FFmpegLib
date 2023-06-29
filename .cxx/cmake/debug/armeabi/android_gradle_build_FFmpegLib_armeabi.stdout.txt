@@ -1,2 +1,0 @@
-ninja: Entering directory `/Users/satsragzaanzabborzood/Documents/Project/Studio/SmallVideoView/FFmpegLib/.cxx/cmake/debug/armeabi'
-ninja: no work to do.

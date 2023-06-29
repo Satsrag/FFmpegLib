@@ -1,4 +1,0 @@
-/Users/satsragzaanzabborzood/Documents/Project/Studio/SmallVideoView/FFmpegLib/.cxx/cmake/debug/arm64-v8a/CMakeFiles/rebuild_cache.dir
-/Users/satsragzaanzabborzood/Documents/Project/Studio/SmallVideoView/FFmpegLib/.cxx/cmake/debug/arm64-v8a/CMakeFiles/edit_cache.dir
-/Users/satsragzaanzabborzood/Documents/Project/Studio/SmallVideoView/FFmpegLib/.cxx/cmake/debug/arm64-v8a/CMakeFiles/tempLib.dir
-/Users/satsragzaanzabborzood/Documents/Project/Studio/SmallVideoView/FFmpegLib/.cxx/cmake/debug/arm64-v8a/CMakeFiles/FFmpegLib.dir
