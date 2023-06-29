@@ -1,0 +1,4 @@
+/Users/satsragzaanzabborzood/Documents/Project/Studio/SmallVideoView/FFmpegLib/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/rebuild_cache.dir
+/Users/satsragzaanzabborzood/Documents/Project/Studio/SmallVideoView/FFmpegLib/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/satsragzaanzabborzood/Documents/Project/Studio/SmallVideoView/FFmpegLib/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/tempLib.dir
+/Users/satsragzaanzabborzood/Documents/Project/Studio/SmallVideoView/FFmpegLib/.cxx/cmake/debug/armeabi-v7a/CMakeFiles/FFmpegLib.dir

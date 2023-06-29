@@ -1,0 +1,7 @@
+Executable : /Users/satsragzaanzabborzood/Library/Android/sdk/cmake/3.10.2.4988404/bin/ninja
+arguments : 
+-C
+/Users/satsragzaanzabborzood/Documents/Project/Studio/SmallVideoView/FFmpegLib/.cxx/cmake/debug/armeabi
+FFmpegLib
+jvmArgs : 
+
