@@ -6,6 +6,8 @@
 #include <libswscale/swscale.h>
 #include <libavutil/opt.h>
 #include <libswresample/swresample.h>
+#include <zconf.h>
+#include <asm/fcntl.h>
 #include "libavformat/avformat.h"
 #include "../Log.h"
 #include "Progress.h"
@@ -45,7 +47,7 @@ static void setProgress(AVPacket *outPacket, AVFormatContext *outFormatContext, 
 }
 
 static int initInput(
-        const char *inFile,
+        char *inPath, int64_t offset, int64_t length,
         AVFormatContext **inFormatContext,
         AVCodecContext **inVideoCodecContext,
         AVCodecContext **inAudioCodecContext,
@@ -57,9 +59,13 @@ static int initInput(
 
     //1. 获取AVFormatContext
     *inFormatContext = avformat_alloc_context();
-    ret = avformat_open_input(inFormatContext, inFile, NULL, NULL);
+    if (length > 0) {
+        (*inFormatContext)->skip_initial_bytes = offset;
+        (*inFormatContext)->probesize = length;
+    }
+    ret = avformat_open_input(inFormatContext, inPath, NULL, NULL);
     if (ret != 0) {
-        LOGE("open input file: %s error!!", inFile);
+        LOGE("open input file: %s error!!", inPath);
         return -1;
     }
 
@@ -106,7 +112,7 @@ static int initInput(
 }
 
 static int initOutput(
-        const char *outFile,
+        char *outPath,
         AVCodecContext *inVideoCodecContext,
         AVCodecContext *inAudioCodecContext,
         AVFormatContext **outFormatContext,
@@ -122,16 +128,15 @@ static int initOutput(
 ) {
 
     int ret;
-
     //1. 创建AVFormat
-    ret = avformat_alloc_output_context2(outFormatContext, NULL, NULL, outFile);
+    ret = avformat_alloc_output_context2(outFormatContext, NULL, NULL, outPath);
     if (ret < 0) {
         LOGE("alloc output format context error!");
         return -100;
     }
 
     //2. 创建AVIOContext
-    ret = avio_open(&(*outFormatContext)->pb, outFile, AVIO_FLAG_READ_WRITE);
+    ret = avio_open(&(*outFormatContext)->pb, outPath, AVIO_FLAG_READ_WRITE);
     if (ret < 0) {
         LOGE("open output AVIOContext error");
         return -101;
@@ -181,7 +186,7 @@ static int initOutput(
             }
 
             //Show some Information
-            av_dump_format(*outFormatContext, 0, outFile, 1);
+            av_dump_format(*outFormatContext, 0, outPath, 1);
 
             //5. 配置AVCodec
             AVCodec *outCodec = NULL;
@@ -245,7 +250,7 @@ static int initOutput(
             (*outAudioCodecContext)->bit_rate = audioBitRate;
 
 //          Show some Information
-            av_dump_format(*outFormatContext, 0, outFile, 1);
+            av_dump_format(*outFormatContext, 0, outPath, 1);
 
             ret = avcodec_open2(*outAudioCodecContext, outCodec, NULL);
             if (ret != 0) {
@@ -594,7 +599,7 @@ static int flushEncoder(
         AVPacket *outPacket,
         int streamIndex,
         AVFormatContext *inFormatContext,
-        char *inFile,
+        char *path,
         int videoId
 ) {
     int ret;
@@ -643,7 +648,7 @@ static int flushEncoder(
                 outFormatContext->streams[streamIndex]->time_base.den
         );
 
-        if (inFile != NULL) {
+        if (path != NULL) {
             setProgress(outPacket, outFormatContext, &streamIndex, inFormatContext, videoId);
         }
 
@@ -662,10 +667,12 @@ static int flushEncoder(
 }
 
 int compress(
-        const char *inFilename,
-        const char *outFilename,
-        long videoBitRate,
-        long audioBitRate,
+        int inFd,
+        int64_t offset,
+        int64_t length,
+        int outFd,
+        int64_t videoBitRate,
+        int64_t audioBitRate,
         int width,
         int height,
         int videoId
@@ -683,6 +690,14 @@ int compress(
     struct SwsContext *swsContext = NULL;
     struct SwrContext *swrContext = NULL;
 
+    int mInFd = fcntl(inFd, F_DUPFD);
+    char inPath[100];
+    sprintf(inPath, "pipe:%d", mInFd);
+
+    int mOutFd = fcntl(outFd, F_DUPFD);
+    char outPath[100];
+    sprintf(outPath, "pipe:%d", mOutFd);
+
     mIsCancel = 1;
 
 //1. 注册
@@ -690,7 +705,7 @@ int compress(
 
 //2. 初始化input
     ret = initInput(
-            inFilename,
+            inPath, offset, length,
             &inFormatContext,
             &inVideoCodecContext,
             &inAudioCodecContext,
@@ -706,7 +721,7 @@ int compress(
 
 //3. 初始化output
     ret = initOutput(
-            outFilename,
+            outPath,
             inVideoCodecContext,
             inAudioCodecContext,
             &outFormatContext,
@@ -794,7 +809,7 @@ int compress(
 
     if (mIsCancel != 0) {
         flushEncoder(outFormatContext, outVideoCodecContext, outPacket,
-                     outVideoIndex, inFormatContext, (char *) inFilename, videoId);
+                     outVideoIndex, inFormatContext, inPath, videoId);
         flushEncoder(outFormatContext, outAudioCodecContext, outPacket,
                      outAudioIndex, NULL, NULL, videoId);
         ret = av_write_trailer(outFormatContext);
@@ -841,6 +856,8 @@ int compress(
         avformat_close_input(&outFormatContext);
         avformat_free_context(outFormatContext);
     }
+    close(mInFd);
+    close(mOutFd);
     return ret;
 }
 

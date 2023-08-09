@@ -27,26 +27,12 @@ public class FFmpegUtil {
         mIsRunning = false;
     }
 
-    public static boolean chip(double startTime, double endTime, String inFile, String outFile) {
-        if (mIsRunning) return false;
+    public static int compress(int inFile, long offset, long length, int outFile, long videoBitRate, long audioBitRate, int width, int height, int videoID) {
+        if (mIsRunning) {
+            return -1;
+        }
         mIsRunning = true;
-        clipVideo(startTime, endTime, inFile, outFile);
-        mIsRunning = false;
-        return true;
-    }
-
-    public static int thumb(String inputFile, String outputFile, String time) {
-        if (mIsRunning) return -1;
-        mIsRunning = true;
-        int thumb = getThumb(inputFile, outputFile, time);
-        mIsRunning = false;
-        return thumb;
-    }
-
-    public static int compress(String inFile, String outFile, long videoBitRate, long audioBitRate, int width, int height, int threadCount) {
-        if (mIsRunning) return -1;
-        mIsRunning = true;
-        int ret = ffmegCompress(inFile, outFile, videoBitRate, audioBitRate, width, height, threadCount);
+        int ret = ffmegCompress(inFile, offset, length, outFile, videoBitRate, audioBitRate, width, height, videoID);
         mIsRunning = false;
         return ret;
     }
@@ -73,11 +59,8 @@ public class FFmpegUtil {
 
     private static native int ffmpegRun(String[] cmd);
 
-    private static native int getThumb(String inputFile, String outputFile, String time);
-
-    private static native void clipVideo(double startTime, double endTime, String inFile, String outFile);
-
-    private static native int ffmegCompress(String inFile, String outFile, long videoBitRate, long audioBitRate, int width, int height, int threadCount);
+    private static native int ffmegCompress(int inFd, long offset, long length, int outFd, long videoBitRate, long audioBitRate,
+                                            int width, int height, int videoID);
 
     private static native void cancelFFmpegCompress();
 
