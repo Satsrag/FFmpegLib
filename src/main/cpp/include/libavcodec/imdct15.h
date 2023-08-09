@@ -16,42 +16,24 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVCODEC_IMDCT15_H
-#define AVCODEC_IMDCT15_H
+#ifndef AVCODEC_UTVIDEODSP_H
+#define AVCODEC_UTVIDEODSP_H
 
+#include <stdint.h>
 #include <stddef.h>
+#include "libavutil/pixfmt.h"
+#include "config.h"
 
-#include "avfft.h"
+typedef struct UTVideoDSPContext {
+    void (*restore_rgb_planes)(uint8_t *src_r, uint8_t *src_g, uint8_t *src_b,
+                               ptrdiff_t linesize_r, ptrdiff_t linesize_g,
+                               ptrdiff_t linesize_b, int width, int height);
+    void (*restore_rgb_planes10)(uint16_t *src_r, uint16_t *src_g, uint16_t *src_b,
+                                 ptrdiff_t linesize_r, ptrdiff_t linesize_g,
+                                 ptrdiff_t linesize_b, int width, int height);
+} UTVideoDSPContext;
 
-typedef struct IMDCT15Context {
-    int fft_n;
-    int len2;
-    int len4;
+void ff_utvideodsp_init(UTVideoDSPContext *c);
+void ff_utvideodsp_init_x86(UTVideoDSPContext *c);
 
-    FFTComplex *tmp;
-
-    FFTComplex *twiddle_exptab;
-
-    FFTComplex *exptab[6];
-
-    /**
-     * Calculate the middle half of the iMDCT
-     */
-    void (*imdct_half)(struct IMDCT15Context *s, float *dst, const float *src,
-                       ptrdiff_t src_stride, float scale);
-} IMDCT15Context;
-
-/**
- * Init an iMDCT of the length 2 * 15 * (2^N)
- */
-int ff_imdct15_init(IMDCT15Context **s, int N);
-
-/**
- * Free an iMDCT.
- */
-void ff_imdct15_uninit(IMDCT15Context **s);
-
-
-void ff_imdct15_init_aarch64(IMDCT15Context *s);
-
-#endif /* AVCODEC_IMDCT15_H */
+#endif /* AVCODEC_UTVIDEODSP_H */

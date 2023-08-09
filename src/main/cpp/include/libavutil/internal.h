@@ -30,9 +30,8 @@
 #    define NDEBUG
 #endif
 
-#if defined(DEBUG) && !defined(CHECKED)
-#    define CHECKED
-#endif
+// This can be enabled to allow detection of additional integer overflows with ubsan
+//#define CHECKED
 
 #include <limits.h>
 #include <stdint.h>
@@ -166,6 +165,8 @@
         goto label;\
     }\
 }
+
+#define FF_PTR_ADD(ptr, off) ((off) ? (ptr) + (off) : (ptr))
 
 #include "libm.h"
 
@@ -353,7 +354,5 @@ void ff_check_pixfmt_descriptors(void);
  * @return <0 on error
  */
 int avpriv_dict_set_timestamp(AVDictionary **dict, const char *key, int64_t timestamp);
-
-extern const uint8_t ff_reverse[256];
 
 #endif /* AVUTIL_INTERNAL_H */

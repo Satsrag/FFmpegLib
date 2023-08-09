@@ -21,26 +21,57 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVCODEC_VP9_H
-#define AVCODEC_VP9_H
+#ifndef AVCODEC_VP9SHARED_H
+#define AVCODEC_VP9SHARED_H
 
+#include <stddef.h>
 #include <stdint.h>
 
+#include "vp9.h"
 #include "thread.h"
 #include "vp56.h"
-
-enum BlockLevel {
-    BL_64X64,
-    BL_32X32,
-    BL_16X16,
-    BL_8X8,
-};
 
 enum BlockPartition {
     PARTITION_NONE,    // [ ] <-.
     PARTITION_H,       // [-]   |
     PARTITION_V,       // [|]   |
     PARTITION_SPLIT,   // [+] --'
+};
+
+enum InterPredMode {
+    NEARESTMV = 10,
+    NEARMV    = 11,
+    ZEROMV    = 12,
+    NEWMV     = 13,
+};
+
+enum CompPredMode {
+    PRED_SINGLEREF,
+    PRED_COMPREF,
+    PRED_SWITCHABLE,
+};
+
+typedef struct VP9mvrefPair {
+    VP56mv mv[2];
+    int8_t ref[2];
+} VP9mvrefPair;
+
+typedef struct VP9Frame {
+    ThreadFrame tf;
+    AVBufferRef *extradata;
+    uint8_t *segmentation_map;
+    VP9mvrefPair *mv;
+    int uses_2pass;
+
+    AVBufferRef *hwaccel_priv_buf;
+    void *hwaccel_picture_private;
+} VP9Frame;
+
+enum BlockLevel {
+    BL_64X64,
+    BL_32X32,
+    BL_16X16,
+    BL_8X8,
 };
 
 enum BlockSize {
@@ -60,83 +91,10 @@ enum BlockSize {
     N_BS_SIZES,
 };
 
-enum TxfmMode {
-    TX_4X4,
-    TX_8X8,
-    TX_16X16,
-    TX_32X32,
-    N_TXFM_SIZES,
-    TX_SWITCHABLE = N_TXFM_SIZES,
-    N_TXFM_MODES
-};
-
-enum TxfmType {
-    DCT_DCT,
-    DCT_ADST,
-    ADST_DCT,
-    ADST_ADST,
-    N_TXFM_TYPES
-};
-
-enum IntraPredMode {
-    VERT_PRED,
-    HOR_PRED,
-    DC_PRED,
-    DIAG_DOWN_LEFT_PRED,
-    DIAG_DOWN_RIGHT_PRED,
-    VERT_RIGHT_PRED,
-    HOR_DOWN_PRED,
-    VERT_LEFT_PRED,
-    HOR_UP_PRED,
-    TM_VP8_PRED,
-    LEFT_DC_PRED,
-    TOP_DC_PRED,
-    DC_128_PRED,
-    DC_127_PRED,
-    DC_129_PRED,
-    N_INTRA_PRED_MODES
-};
-
-enum InterPredMode {
-    NEARESTMV = 10,
-    NEARMV = 11,
-    ZEROMV = 12,
-    NEWMV = 13,
-};
-
-enum FilterMode {
-    FILTER_8TAP_SMOOTH,
-    FILTER_8TAP_REGULAR,
-    FILTER_8TAP_SHARP,
-    FILTER_BILINEAR,
-    FILTER_SWITCHABLE,
-};
-
-enum CompPredMode {
-    PRED_SINGLEREF,
-    PRED_COMPREF,
-    PRED_SWITCHABLE,
-};
-
-struct VP9mvrefPair {
-    VP56mv mv[2];
-    int8_t ref[2];
-};
-
-typedef struct VP9Frame {
-    ThreadFrame tf;
-    AVBufferRef *extradata;
-    uint8_t *segmentation_map;
-    struct VP9mvrefPair *mv;
-    int uses_2pass;
-
-    AVBufferRef *hwaccel_priv_buf;
-    void *hwaccel_picture_private;
-} VP9Frame;
-
 typedef struct VP9BitstreamHeader {
     // bitstream header
     uint8_t profile;
+    uint8_t bpp;
     uint8_t keyframe;
     uint8_t invisible;
     uint8_t errorres;
@@ -208,4 +166,4 @@ typedef struct VP9SharedContext {
     VP9Frame frames[3];
 } VP9SharedContext;
 
-#endif /* AVCODEC_VP9_H */
+#endif /* AVCODEC_VP9SHARED_H */

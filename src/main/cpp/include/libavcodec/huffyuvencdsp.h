@@ -16,12 +16,12 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVCODEC_HUFFYUVENCDSP_H
-#define AVCODEC_HUFFYUVENCDSP_H
+#ifndef AVCODEC_LOSSLESS_VIDEOENCDSP_H
+#define AVCODEC_LOSSLESS_VIDEOENCDSP_H
 
 #include <stdint.h>
 
-typedef struct HuffYUVEncDSPContext {
+typedef struct LLVidEncDSPContext {
     void (*diff_bytes)(uint8_t *dst /* align 16 */,
                        const uint8_t *src1 /* align 16 */,
                        const uint8_t *src2 /* align 1 */,
@@ -30,12 +30,12 @@ typedef struct HuffYUVEncDSPContext {
      * Subtract HuffYUV's variant of median prediction.
      * Note, this might read from src1[-1], src2[-1].
      */
-    void (*sub_hfyu_median_pred)(uint8_t *dst, const uint8_t *src1,
-                                 const uint8_t *src2, intptr_t w,
-                                 int *left, int *left_top);
-} HuffYUVEncDSPContext;
+    void (*sub_median_pred)(uint8_t *dst, const uint8_t *src1,
+                            const uint8_t *src2, intptr_t w,
+                            int *left, int *left_top);
+} LLVidEncDSPContext;
 
-void ff_huffyuvencdsp_init(HuffYUVEncDSPContext *c);
-void ff_huffyuvencdsp_init_x86(HuffYUVEncDSPContext *c);
+void ff_llvidencdsp_init(LLVidEncDSPContext *c);
+void ff_llvidencdsp_init_x86(LLVidEncDSPContext *c);
 
-#endif /* AVCODEC_HUFFYUVENCDSP_H */
+#endif /* AVCODEC_LOSSLESS_VIDEOENCDSP_H */

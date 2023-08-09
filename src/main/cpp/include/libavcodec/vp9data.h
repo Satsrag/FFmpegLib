@@ -19,20 +19,26 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 
-#ifndef AVCODEC_VP9DATA_H
-#define AVCODEC_VP9DATA_H
-
-#include <stdint.h>
-
 #include "vp9.h"
+#include "vp9data.h"
 
-static const int8_t vp9_partition_tree[3][2] = {
-    { -PARTITION_NONE, 1 },               // '0'
-     { -PARTITION_H, 2 },                 // '10'
-      { -PARTITION_V, -PARTITION_SPLIT }, // '110', '111'
+const uint8_t ff_vp9_bwh_tab[2][N_BS_SIZES][2] = {
+    {
+        { 16, 16 }, { 16, 8 }, { 8, 16 }, { 8, 8 }, { 8, 4 }, { 4, 8 },
+        {  4,  4 }, {  4, 2 }, { 2,  4 }, { 2, 2 }, { 2, 1 }, { 1, 2 }, { 1, 1 },
+    }, {
+        {  8,  8 }, {  8, 4 }, { 4,  8 }, { 4, 4 }, { 4, 2 }, { 2, 4 },
+        {  2,  2 }, {  2, 1 }, { 1,  2 }, { 1, 1 }, { 1, 1 }, { 1, 1 }, { 1, 1 },
+    }
 };
 
-static const uint8_t vp9_default_kf_partition_probs[4][4][3] = {
+const int8_t ff_vp9_partition_tree[3][2] = {
+    { -PARTITION_NONE, 1 },                      // '0'
+        { -PARTITION_H, 2 },                     // '10'
+            { -PARTITION_V, -PARTITION_SPLIT },  // '110', '111'
+};
+
+const uint8_t ff_vp9_default_kf_partition_probs[4][4][3] = {
     { /* 64x64 -> 32x32 */
         { 174,  35,  49 } /* a/l both not split */,
         {  68,  11,  27 } /* a split, l not split */,
@@ -56,29 +62,29 @@ static const uint8_t vp9_default_kf_partition_probs[4][4][3] = {
     },
 };
 
-static const int8_t vp9_segmentation_tree[7][2] = {
+const int8_t ff_vp9_segmentation_tree[7][2] = {
     { 1, 2 },
-     { 3, 4 },
-     { 5, 6 },
-      { -0, -1 }, // '00x'
-      { -2, -3 }, // '01x'
-      { -4, -5 }, // '10x'
-      { -6, -7 }, // '11x'
+        { 3, 4 },
+        { 5, 6 },
+            { -0, -1 },  // '00x'
+            { -2, -3 },  // '01x'
+            { -4, -5 },  // '10x'
+            { -6, -7 },  // '11x'
 };
 
-static const int8_t vp9_intramode_tree[9][2] = {
-    { -DC_PRED, 1 },                                  // '0'
-     { -TM_VP8_PRED, 2 },                             // '10'
-      { -VERT_PRED, 3 },                              // '110'
-       { 4, 6 },
-        { -HOR_PRED, 5 },                             // '11100'
-         { -DIAG_DOWN_RIGHT_PRED, -VERT_RIGHT_PRED }, // '11101x'
-        { -DIAG_DOWN_LEFT_PRED, 7 },                  // '11110'
-         { -VERT_LEFT_PRED, 8 },                      // '111110'
-          { -HOR_DOWN_PRED, -HOR_UP_PRED },           // '111111x'
+const int8_t ff_vp9_intramode_tree[9][2] = {
+    { -DC_PRED, 1 },                                                  // '0'
+        { -TM_VP8_PRED, 2 },                                          // '10'
+            { -VERT_PRED, 3 },                                        // '110'
+                { 4, 6 },
+                    { -HOR_PRED, 5 },                                 // '11100'
+                        { -DIAG_DOWN_RIGHT_PRED, -VERT_RIGHT_PRED },  // '11101x'
+                    { -DIAG_DOWN_LEFT_PRED, 7 },                      // '11110'
+                        { -VERT_LEFT_PRED, 8 },                       // '111110'
+                            { -HOR_DOWN_PRED, -HOR_UP_PRED },         // '111111x'
 };
 
-static const uint8_t vp9_default_kf_ymode_probs[10][10][9] = {
+const uint8_t ff_vp9_default_kf_ymode_probs[10][10][9] = {
     { /* above = v */
         {  43,  46, 168, 134, 107, 128,  69, 142,  92 } /* left = v */,
         {  44,  29,  68, 159, 201, 177,  50,  57,  77 } /* left = h */,
@@ -192,7 +198,7 @@ static const uint8_t vp9_default_kf_ymode_probs[10][10][9] = {
     }
 };
 
-static const uint8_t vp9_default_kf_uvmode_probs[10][9] = {
+const uint8_t ff_vp9_default_kf_uvmode_probs[10][9] = {
     { 118,  15, 123, 148, 131, 101,  44,  93, 131 } /* y = v */,
     { 113,  12,  23, 188, 226, 142,  26,  32, 125 } /* y = h */,
     { 144,  11,  54, 157, 195, 130,  46,  58, 108 } /* y = dc */,
@@ -205,24 +211,24 @@ static const uint8_t vp9_default_kf_uvmode_probs[10][9] = {
     { 102,  19,  66, 162, 182, 122,  35,  59, 128 } /* y = tm */
 };
 
-static const int8_t vp9_inter_mode_tree[3][2] = {
-    { -ZEROMV, 1 },        // '0'
-     { -NEARESTMV, 2 },    // '10'
-      { -NEARMV, -NEWMV }, // '11x'
+const int8_t ff_vp9_inter_mode_tree[3][2] = {
+    { -ZEROMV, 1 },               // '0'
+        { -NEARESTMV, 2 },        // '10'
+            { -NEARMV, -NEWMV },  // '11x'
 };
 
-static const int8_t vp9_filter_tree[2][2] = {
-    { -0, 1 },   // '0'
-     { -1, -2 }, // '1x'
+const int8_t ff_vp9_filter_tree[2][2] = {
+    { -0,  1 },     // '0'
+        { -1, -2 }, // '1x'
 };
 
-static const enum FilterMode vp9_filter_lut[3] = {
+const enum FilterMode ff_vp9_filter_lut[3] = {
     FILTER_8TAP_REGULAR,
     FILTER_8TAP_SMOOTH,
     FILTER_8TAP_SHARP,
 };
 
-static const int16_t vp9_dc_qlookup[3][256] = {
+const int16_t ff_vp9_dc_qlookup[3][256] = {
     {
             4,     8,     8,     9,    10,    11,    12,    12,
            13,    14,    15,    16,    17,    18,    19,    19,
@@ -325,7 +331,7 @@ static const int16_t vp9_dc_qlookup[3][256] = {
     }
 };
 
-static const int16_t vp9_ac_qlookup[3][256] = {
+const int16_t ff_vp9_ac_qlookup[3][256] = {
     {
             4,     8,     9,    10,    11,    12,    13,    14,
            15,    16,    17,    18,    19,    20,    21,    22,
@@ -428,7 +434,7 @@ static const int16_t vp9_ac_qlookup[3][256] = {
     }
 };
 
-static const enum TxfmType vp9_intra_txfm_type[14] = {
+const enum TxfmType ff_vp9_intra_txfm_type[14] = {
     [VERT_PRED]            = ADST_DCT,
     [HOR_PRED]             = DCT_ADST,
     [DC_PRED]              = DCT_DCT,
@@ -445,28 +451,28 @@ static const enum TxfmType vp9_intra_txfm_type[14] = {
     [NEWMV]                = DCT_DCT,
 };
 
-static const int16_t vp9_default_scan_4x4[16] = {
+const int16_t ff_vp9_default_scan_4x4[16] = {
      0,  1,  4,  5,
      2,  8,  3,  6,
     12,  9,  7, 10,
     13, 11, 14, 15,
 };
 
-static const int16_t vp9_col_scan_4x4[16] = {
+const int16_t ff_vp9_col_scan_4x4[16] = {
      0,  1,  2,  4,
      3,  5,  6,  8,
      7,  9, 10, 12,
     13, 11, 14, 15,
 };
 
-static const int16_t vp9_row_scan_4x4[16] = {
+const int16_t ff_vp9_row_scan_4x4[16] = {
      0,  4,  1,  8,
      5, 12,  9,  2,
      6, 13,  3, 10,
      7, 14, 11, 15,
 };
 
-static const int16_t vp9_default_scan_8x8[64] = {
+const int16_t ff_vp9_default_scan_8x8[64] = {
      0,  1,  8,  2,  9, 16, 10,  3,
     17, 24, 18, 11,  4, 25, 32, 19,
     12, 26,  5, 33, 20, 27, 40, 13,
@@ -477,7 +483,7 @@ static const int16_t vp9_default_scan_8x8[64] = {
     53, 60, 47, 54, 61, 55, 62, 63,
 };
 
-static const int16_t vp9_col_scan_8x8[64] = {
+const int16_t ff_vp9_col_scan_8x8[64] = {
      0,  1,  2,  8,  3,  9,  4, 10,
     16,  5, 11, 17, 12, 18,  6, 24,
     19, 13, 25,  7, 26, 20, 32, 14,
@@ -488,7 +494,7 @@ static const int16_t vp9_col_scan_8x8[64] = {
     59, 47, 60, 54, 61, 55, 62, 63,
 };
 
-static const int16_t vp9_row_scan_8x8[64] = {
+const int16_t ff_vp9_row_scan_8x8[64] = {
      0,  8, 16,  1,  9, 24,  2, 17,
     32, 10, 25,  3, 40, 18, 11, 33,
     26, 19,  4, 48, 41, 34, 12, 27,
@@ -499,7 +505,7 @@ static const int16_t vp9_row_scan_8x8[64] = {
     39, 60, 47, 61, 54, 62, 55, 63,
 };
 
-static const int16_t vp9_default_scan_16x16[256] = {
+const int16_t ff_vp9_default_scan_16x16[256] = {
       0,   1,  16,   2,  17,  32,   3,  18,  33,  48,   4,  34,  19,  49,  20,   5,
      35,  64,  50,  36,  65,  21,   6,  51,  80,  66,  37,  22,  52,   7,  81,  67,
      38,  82,  53,  23,  96,  68,   8,  83,  97,  54,  39,  69, 112,  24,  98,  84,
@@ -518,7 +524,7 @@ static const int16_t vp9_default_scan_16x16[256] = {
     235, 221, 250, 206, 222, 251, 236, 207, 237, 223, 252, 238, 253, 239, 254, 255,
 };
 
-static const int16_t vp9_col_scan_16x16[256] = {
+const int16_t ff_vp9_col_scan_16x16[256] = {
       0,   1,   2,   3,  16,   4,  17,   5,  18,   6,  19,  32,  20,   7,  33,  21,
      34,   8,  35,  22,  48,  36,   9,  49,  23,  50,  37,  10,  38,  51,  24,  64,
      52,  11,  65,  39,  25,  53,  66,  54,  40,  67,  12,  80,  26,  68,  55,  81,
@@ -537,7 +543,7 @@ static const int16_t vp9_col_scan_16x16[256] = {
     249, 235, 221, 207, 250, 236, 222, 251, 223, 237, 238, 252, 239, 253, 254, 255,
 };
 
-static const int16_t vp9_row_scan_16x16[256] = {
+const int16_t ff_vp9_row_scan_16x16[256] = {
       0,  16,  32,   1,  48,  17,  64,  33,   2,  80,  18,  49,  96,  34,   3,  65,
      19, 112,  50,  81,  35,   4, 128,  66,  20,  97,  51,  82,   5, 144,  36,  67,
     113,  98,  21,  52, 160,  83, 129,  37,  68,   6, 114, 176,  99,  53,  22,  84,
@@ -556,7 +562,7 @@ static const int16_t vp9_row_scan_16x16[256] = {
     235, 191, 221, 251, 236, 206, 252, 222, 207, 237, 223, 253, 238, 254, 239, 255,
 };
 
-static const int16_t vp9_default_scan_32x32[1024] = {
+const int16_t ff_vp9_default_scan_32x32[1024] = {
        0,    1,   32,    2,   33,   64,    3,   34,   65,    4,   96,   35,   66,    5,   36,   97,   67,  128,   98,   68,   37,    6,  129,   99,    7,  160,   69,   38,  130,  100,  161,  131,
       39,   70,    8,  101,  162,  132,  192,   71,   40,    9,  102,  163,  133,  193,   72,  224,  103,   41,  164,   10,  194,  134,  165,   73,  104,  135,  225,   42,  195,   11,  256,  166,
      226,  196,   74,  105,  136,   43,   12,  167,  197,  227,  257,   75,  106,  137,  228,   44,  198,  168,  258,  288,   13,  229,   76,  107,  199,  138,  259,  169,  289,   45,  230,  260,
@@ -591,47 +597,47 @@ static const int16_t vp9_default_scan_32x32[1024] = {
      923,  954,  985, 1016,  831,  862,  893,  955,  986, 1017,  863,  894,  987, 1018,  895, 1019,  924,  925,  956,  926,  957,  988,  927,  958,  989, 1020,  959,  990, 1021,  991, 1022, 1023,
 };
 
-static const int16_t * const vp9_scans[5][4] = {
+const int16_t * const ff_vp9_scans[5][4] = {
     {
-        vp9_default_scan_4x4, vp9_col_scan_4x4,
-        vp9_row_scan_4x4, vp9_default_scan_4x4
+        ff_vp9_default_scan_4x4, ff_vp9_col_scan_4x4,
+        ff_vp9_row_scan_4x4, ff_vp9_default_scan_4x4
     }, {
-        vp9_default_scan_8x8, vp9_col_scan_8x8,
-        vp9_row_scan_8x8, vp9_default_scan_8x8
+        ff_vp9_default_scan_8x8, ff_vp9_col_scan_8x8,
+        ff_vp9_row_scan_8x8, ff_vp9_default_scan_8x8
     }, {
-        vp9_default_scan_16x16, vp9_col_scan_16x16,
-        vp9_row_scan_16x16, vp9_default_scan_16x16
+        ff_vp9_default_scan_16x16, ff_vp9_col_scan_16x16,
+        ff_vp9_row_scan_16x16, ff_vp9_default_scan_16x16
     }, {
-        vp9_default_scan_32x32, vp9_default_scan_32x32,
-        vp9_default_scan_32x32, vp9_default_scan_32x32
+        ff_vp9_default_scan_32x32, ff_vp9_default_scan_32x32,
+        ff_vp9_default_scan_32x32, ff_vp9_default_scan_32x32
     }, { // lossless
-        vp9_default_scan_4x4, vp9_default_scan_4x4,
-        vp9_default_scan_4x4, vp9_default_scan_4x4
+        ff_vp9_default_scan_4x4, ff_vp9_default_scan_4x4,
+        ff_vp9_default_scan_4x4, ff_vp9_default_scan_4x4
     }
 };
 
-static const int16_t vp9_default_scan_4x4_nb[16][2] = {
+const int16_t ff_vp9_default_scan_4x4_nb[16][2] = {
     {  0,  0 }, {  0,  0 }, {  4,  1 }, {  1,  1 },
     {  4,  4 }, {  2,  2 }, {  5,  2 }, {  8,  8 },
     {  8,  5 }, {  6,  3 }, {  9,  6 }, { 12,  9 },
     { 10,  7 }, { 13, 10 }, { 14, 11 }, {  0,  0 },
 };
 
-static const int16_t vp9_col_scan_4x4_nb[16][2] = {
+const int16_t ff_vp9_col_scan_4x4_nb[16][2] = {
     {  0,  0 }, {  1,  1 }, {  0,  0 }, {  2,  2 },
     {  4,  4 }, {  5,  5 }, {  4,  4 }, {  6,  6 },
     {  8,  8 }, {  9,  9 }, {  8,  8 }, { 12, 12 },
     { 10, 10 }, { 13, 13 }, { 14, 14 }, {  0,  0 },
 };
 
-static const int16_t vp9_row_scan_4x4_nb[16][2] = {
+const int16_t ff_vp9_row_scan_4x4_nb[16][2] = {
     {  0,  0 }, {  0,  0 }, {  4,  4 }, {  1,  1 },
     {  8,  8 }, {  5,  5 }, {  1,  1 }, {  2,  2 },
     {  9,  9 }, {  2,  2 }, {  6,  6 }, {  3,  3 },
     { 10, 10 }, {  7,  7 }, { 11, 11 }, {  0,  0 },
 };
 
-static const int16_t vp9_default_scan_8x8_nb[64][2] = {
+const int16_t ff_vp9_default_scan_8x8_nb[64][2] = {
     {  0,  0 }, {  0,  0 }, {  1,  1 }, {  8,  1 },
     {  8,  8 }, {  9,  2 }, {  2,  2 }, { 16,  9 },
     { 16, 16 }, { 17, 10 }, { 10,  3 }, {  3,  3 },
@@ -650,7 +656,7 @@ static const int16_t vp9_default_scan_8x8_nb[64][2] = {
     { 54, 47 }, { 61, 54 }, { 62, 55 }, {  0,  0 },
 };
 
-static const int16_t vp9_col_scan_8x8_nb[64][2] = {
+const int16_t ff_vp9_col_scan_8x8_nb[64][2] = {
     {  0,  0 }, {  1,  1 }, {  0,  0 }, {  2,  2 },
     {  8,  8 }, {  3,  3 }, {  9,  9 }, {  8,  8 },
     {  4,  4 }, { 10, 10 }, { 16, 16 }, { 11, 11 },
@@ -669,7 +675,7 @@ static const int16_t vp9_col_scan_8x8_nb[64][2] = {
     { 54, 54 }, { 61, 61 }, { 62, 62 }, {  0,  0 },
 };
 
-static const int16_t vp9_row_scan_8x8_nb[64][2] = {
+const int16_t ff_vp9_row_scan_8x8_nb[64][2] = {
     {  0,  0 }, {  8,  8 }, {  0,  0 }, {  1,  1 },
     { 16, 16 }, {  1,  1 }, {  9,  9 }, { 24, 24 },
     {  2,  2 }, { 17, 17 }, {  2,  2 }, { 32, 32 },
@@ -688,7 +694,7 @@ static const int16_t vp9_row_scan_8x8_nb[64][2] = {
     { 54, 54 }, { 47, 47 }, { 55, 55 }, {  0,  0 },
 };
 
-static const int16_t vp9_default_scan_16x16_nb[256][2] = {
+const int16_t ff_vp9_default_scan_16x16_nb[256][2] = {
     {   0,   0 }, {   0,   0 }, {   1,   1 }, {  16,   1 },
     {  16,  16 }, {   2,   2 }, {  17,   2 }, {  32,  17 },
     {  32,  32 }, {   3,   3 }, {  33,  18 }, {  18,   3 },
@@ -755,7 +761,7 @@ static const int16_t vp9_default_scan_16x16_nb[256][2] = {
     { 238, 223 }, { 253, 238 }, { 254, 239 }, {   0,   0 },
 };
 
-static const int16_t vp9_col_scan_16x16_nb[256][2] = {
+const int16_t ff_vp9_col_scan_16x16_nb[256][2] = {
     {   0,   0 }, {   1,   1 }, {   2,   2 }, {   0,   0 },
     {   3,   3 }, {  16,  16 }, {   4,   4 }, {  17,  17 },
     {   5,   5 }, {  18,  18 }, {  16,  16 }, {  19,  19 },
@@ -822,7 +828,7 @@ static const int16_t vp9_col_scan_16x16_nb[256][2] = {
     { 252, 252 }, { 253, 253 }, { 254, 254 }, {   0,   0 },
 };
 
-static const int16_t vp9_row_scan_16x16_nb[256][2] = {
+const int16_t ff_vp9_row_scan_16x16_nb[256][2] = {
     {   0,   0 }, {  16,  16 }, {   0,   0 }, {  32,  32 },
     {   1,   1 }, {  48,  48 }, {  17,  17 }, {   1,   1 },
     {  64,  64 }, {   2,   2 }, {  33,  33 }, {  80,  80 },
@@ -889,7 +895,7 @@ static const int16_t vp9_row_scan_16x16_nb[256][2] = {
     { 238, 238 }, { 223, 223 }, { 239, 239 }, {   0,   0 },
 };
 
-static const int16_t vp9_default_scan_32x32_nb[1024][2] = {
+const int16_t ff_vp9_default_scan_32x32_nb[1024][2] = {
     {    0,    0 }, {    0,    0 }, {    1,    1 }, {   32,    1 },
     {   32,   32 }, {    2,    2 }, {   33,    2 }, {   64,   33 },
     {    3,    3 }, {   64,   64 }, {   34,    3 }, {   65,   34 },
@@ -1148,26 +1154,26 @@ static const int16_t vp9_default_scan_32x32_nb[1024][2] = {
     {  990,  959 }, { 1021,  990 }, { 1022,  991 }, {    0,    0 },
 };
 
-static const int16_t (* const vp9_scans_nb[5][4])[2] = {
+const int16_t (* const ff_vp9_scans_nb[5][4])[2] = {
     {
-        vp9_default_scan_4x4_nb, vp9_col_scan_4x4_nb,
-        vp9_row_scan_4x4_nb, vp9_default_scan_4x4_nb
+        ff_vp9_default_scan_4x4_nb, ff_vp9_col_scan_4x4_nb,
+        ff_vp9_row_scan_4x4_nb, ff_vp9_default_scan_4x4_nb
     }, {
-        vp9_default_scan_8x8_nb, vp9_col_scan_8x8_nb,
-        vp9_row_scan_8x8_nb, vp9_default_scan_8x8_nb
+        ff_vp9_default_scan_8x8_nb, ff_vp9_col_scan_8x8_nb,
+        ff_vp9_row_scan_8x8_nb, ff_vp9_default_scan_8x8_nb
     }, {
-        vp9_default_scan_16x16_nb, vp9_col_scan_16x16_nb,
-        vp9_row_scan_16x16_nb, vp9_default_scan_16x16_nb
+        ff_vp9_default_scan_16x16_nb, ff_vp9_col_scan_16x16_nb,
+        ff_vp9_row_scan_16x16_nb, ff_vp9_default_scan_16x16_nb
     }, {
-        vp9_default_scan_32x32_nb, vp9_default_scan_32x32_nb,
-        vp9_default_scan_32x32_nb, vp9_default_scan_32x32_nb
+        ff_vp9_default_scan_32x32_nb, ff_vp9_default_scan_32x32_nb,
+        ff_vp9_default_scan_32x32_nb, ff_vp9_default_scan_32x32_nb
     }, { // lossless
-        vp9_default_scan_4x4_nb, vp9_default_scan_4x4_nb,
-        vp9_default_scan_4x4_nb, vp9_default_scan_4x4_nb
+        ff_vp9_default_scan_4x4_nb, ff_vp9_default_scan_4x4_nb,
+        ff_vp9_default_scan_4x4_nb, ff_vp9_default_scan_4x4_nb
     }
 };
 
-static const uint8_t vp9_model_pareto8[256][8] = {
+const uint8_t ff_vp9_model_pareto8[256][8] = {
     {   6,  86, 128,  11,  87,  42,  91,  52 },
     {   3,  86, 128,   6,  86,  23,  88,  29 },
     {   6,  86, 128,  11,  87,  42,  91,  52 },
@@ -1426,34 +1432,7 @@ static const uint8_t vp9_model_pareto8[256][8] = {
     { 255, 246, 247, 255, 239, 255, 253, 255 },
 };
 
-typedef struct {
-    uint8_t y_mode[4][9];
-    uint8_t uv_mode[10][9];
-    uint8_t filter[4][2];
-    uint8_t mv_mode[7][3];
-    uint8_t intra[4];
-    uint8_t comp[5];
-    uint8_t single_ref[5][2];
-    uint8_t comp_ref[5];
-    uint8_t tx32p[2][3];
-    uint8_t tx16p[2][2];
-    uint8_t tx8p[2];
-    uint8_t skip[3];
-    uint8_t mv_joint[3];
-    struct {
-        uint8_t sign;
-        uint8_t classes[10];
-        uint8_t class0;
-        uint8_t bits[10];
-        uint8_t class0_fp[2][3];
-        uint8_t fp[3];
-        uint8_t class0_hp;
-        uint8_t hp;
-    } mv_comp[2];
-    uint8_t partition[4][4][3];
-} prob_context;
-
-static const prob_context vp9_default_probs = {
+const ProbContext ff_vp9_default_probs = {
     { /* y_mode */
         {  65,  32,  18, 144, 162, 194,  41,  51,  98 } /* bsize < 8x8 */,
         { 132,  68,  18, 165, 217, 196,  45,  40,  78 } /* bsize < 16x16 */,
@@ -1476,13 +1455,13 @@ static const prob_context vp9_default_probs = {
         {  34,   3, },
         { 149, 144, },
     }, { /* mv_mode */
-        {  2, 173,  34},  // 0 = both zero mv
-        {  7, 145,  85},  // 1 = one zero mv + one a predicted mv
-        {  7, 166,  63},  // 2 = two predicted mvs
-        {  7,  94,  66},  // 3 = one predicted/zero and one new mv
-        {  8,  64,  46},  // 4 = two new mvs
-        { 17,  81,  31},  // 5 = one intra neighbour + x
-        { 25,  29,  30},  // 6 = two intra neighbours
+        {  2, 173,  34 },  // 0 = both zero mv
+        {  7, 145,  85 },  // 1 = one zero mv + one a predicted mv
+        {  7, 166,  63 },  // 2 = two predicted mvs
+        {  7,  94,  66 },  // 3 = one predicted/zero and one new mv
+        {  8,  64,  46 },  // 4 = two new mvs
+        { 17,  81,  31 },  // 5 = one intra neighbor + x
+        { 25,  29,  30 },  // 6 = two intra neighbors
     }, { /* intra */
         9, 102, 187, 225
     }, { /* comp */
@@ -1512,7 +1491,7 @@ static const prob_context vp9_default_probs = {
             128, /* sign */
             { 224, 144, 192, 168, 192, 176, 192, 198, 198, 245 }, /* class */
             216, /* class0 */
-            { 136, 140, 148, 160, 176, 192, 224, 234, 234, 240}, /* bits */
+            { 136, 140, 148, 160, 176, 192, 224, 234, 234, 240 }, /* bits */
             { /* class0_fp */
                 { 128, 128, 64 },
                 {  96, 112, 64 }
@@ -1558,7 +1537,7 @@ static const prob_context vp9_default_probs = {
     },
 };
 
-static const uint8_t vp9_default_coef_probs[4][2][2][6][6][3] = {
+const uint8_t ff_vp9_default_coef_probs[4][2][2][6][6][3] = {
     { /* tx = 4x4 */
         { /* block Type 0 */
             { /* Intra */
@@ -2242,36 +2221,27 @@ static const uint8_t vp9_default_coef_probs[4][2][2][6][6][3] = {
     }
 };
 
-enum MVJoint {
-    MV_JOINT_ZERO,
-    MV_JOINT_H,
-    MV_JOINT_V,
-    MV_JOINT_HV,
+const int8_t ff_vp9_mv_joint_tree[3][2] = {
+    { -MV_JOINT_ZERO, 1 },                  // '0'
+        { -MV_JOINT_H, 2 },                 // '10'
+            { -MV_JOINT_V, -MV_JOINT_HV },  // '11x'
 };
 
-static const int8_t vp9_mv_joint_tree[3][2] = {
-    { -MV_JOINT_ZERO, 1 },           // '0'
-     { -MV_JOINT_H, 2 },             // '10'
-      { -MV_JOINT_V, -MV_JOINT_HV }, // '11x'
+const int8_t ff_vp9_mv_class_tree[10][2] = {
+    { -0,   1 },                          // '0'
+        { -1,   2 },                      // '10'
+            {  3,   4 },
+                { -2,  -3 },              // '110x'
+                {  5,   6 },
+                    { -4,  -5 },          // '1110x'
+                    { -6,   7 },          // '11110'
+                        {  8,   9 },
+                            { -7,  -8 },  // '111110x'
+                            { -9, -10 },  // '111111x'
 };
 
-static const int8_t vp9_mv_class_tree[10][2] = {
-    { -0, 1 },         // '0'
-     { -1, 2 },        // '10'
-      { 3, 4 },
-       { -2, -3 },     // '110x'
-       { 5, 6 },
-        { -4, -5 },    // '1110x'
-        { -6, 7 },     // '11110'
-         { 8, 9 },
-          { -7, -8 },  // '111110x'
-          { -9, -10 }, // '111111x'
+const int8_t ff_vp9_mv_fp_tree[3][2] = {
+    { -0,  1 },          // '0'
+        { -1,  2 },      // '10'
+            { -2, -3 },  // '11x'
 };
-
-static const int8_t vp9_mv_fp_tree[3][2] = {
-    { -0, 1 },    // '0'
-     { -1, 2 },   // '10'
-      { -2, -3 }, // '11x'
-};
-
-#endif /* AVCODEC_VP9DATA_H */
