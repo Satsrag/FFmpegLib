@@ -46,7 +46,7 @@ Java_com_zuga_ffmpeg_FFmpegUtil_ffmegCompress(JNIEnv *env, jclass type, jint inF
                                               jlong audioBitRate, jint width, jint height,
                                               jint videoID) {
     setJni(env);
-    int ret = compress(inFd, offset, length, outFd, videoBitRate, audioBitRate, width, height,
+    int ret = compressFFmpeg(inFd, offset, length, outFd, videoBitRate, audioBitRate, width, height,
                        videoID);
     return ret;
 }

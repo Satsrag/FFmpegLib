@@ -42,10 +42,6 @@ add_library(libavutil SHARED IMPORTED)
 set_target_properties(libavutil PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/lib/${ANDROID_ABI}/libavutil.so)
 add_library(libswscale SHARED IMPORTED)
 set_target_properties(libswscale PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/lib/${ANDROID_ABI}/libswscale.so)
-add_library(lib264 STATIC IMPORTED)
-set_target_properties(lib264 PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/lib/armeabi/libx264.a)
-add_library(aac SHARED IMPORTED)
-set_target_properties(aac PROPERTIES IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/src/main/cpp/lib/${ANDROID_ABI}/libfdk-aac.so)
 
 include_directories(src/main/cpp/include)
 
@@ -53,6 +49,6 @@ find_library(log-lib log)
 find_library(z z)
 
 
-target_link_libraries(tempLib libavformat libavfilter libavcodec libswresample libswscale libavutil lib264 aac ${z} ${log-lib})
+target_link_libraries(tempLib libavformat libavfilter libavcodec libswresample libswscale libavutil ${z} ${log-lib})
 target_link_libraries(FFmpegLib tempLib ${log-lib})
 
