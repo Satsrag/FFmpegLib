@@ -3,7 +3,7 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion 28
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 21
         externalNativeBuild {
             cmake {
                 cppFlags "-std=c++11"
