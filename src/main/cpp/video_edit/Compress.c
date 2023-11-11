@@ -666,7 +666,7 @@ static int flushEncoder(
     return 0;
 }
 
-int compressF(
+int compressFFmpeg(
         int inFd,
         int64_t offset,
         int64_t length,

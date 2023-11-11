@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 
-int compressF(
+int compressFFmpeg(
         int inFd,
         int64_t offset,
         int64_t length,
